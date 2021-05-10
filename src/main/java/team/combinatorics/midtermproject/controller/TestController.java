@@ -24,8 +24,6 @@ public class TestController {
 
     @RequestMapping(value = "/loginIn", method = RequestMethod.POST)
     public String login(String name, String password) {
-        System.out.println("name is " + name);
-        System.out.println("password is " + password);
         if(name.equals("shuwashuwa") && password.equals("114514")){
             return "success";
         }else {
