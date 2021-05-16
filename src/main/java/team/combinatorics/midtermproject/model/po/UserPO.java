@@ -5,14 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestPO {
+public class UserPO implements Serializable {
 
-    private Integer id;
+    private Integer uid;
     private String userName;
-    private String password;
+    private String address;
+    private String phoneNumber;
+    private String email;
 
 }

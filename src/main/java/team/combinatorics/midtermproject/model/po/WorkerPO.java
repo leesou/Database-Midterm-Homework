@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestPO {
+public class WorkerPO {
 
-    private Integer id;
-    private String userName;
-    private String password;
+    private Integer wid;
+    private String workerName;
+    private Double salary;
+    private Integer did;
+    private String phoneNumber;
+    private String email;
 
 }

@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestPO {
-
-    private Integer id;
-    private String userName;
-    private String password;
-
+public class DepartmentPO {
+    private Integer did;
+    private String departmentName;
 }

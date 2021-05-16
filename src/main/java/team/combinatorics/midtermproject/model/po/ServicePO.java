@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestPO {
+public class ServicePO {
 
-    private Integer id;
-    private String userName;
-    private String password;
+    private Integer sid;
+    private String serviceType;
+    private String description;
+    private String state;
+    private Integer wid;
+    private Integer pid;
 
 }
