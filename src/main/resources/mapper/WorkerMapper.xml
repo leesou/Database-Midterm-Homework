@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.combinatorics.midtermproject.dao.WorkerDao">
+
+  <resultMap id="BaseResultMap" type="team.combinatorics.midtermproject.model.po.WorkerPO">
+    <id column="wid" jdbcType="INTEGER" property="wid" />
+    <result column="worker_name" jdbcType="VARCHAR" property="workerName" />
+    <result column="salary" jdbcType="DOUBLE" property="salary" />
+    <result column="did" jdbcType="INTEGER" property="did" />
+    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from worker
+    where wid = #{wid,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.WorkerPO">
+    <selectKey keyProperty="wid" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into worker (worker_name, salary, did, 
+      phone_number, email)
+    values (#{workerName,jdbcType=VARCHAR}, #{salary,jdbcType=DOUBLE}, #{did,jdbcType=INTEGER}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="team.combinatorics.midtermproject.model.po.WorkerPO">
+    update worker
+    set worker_name = #{workerName,jdbcType=VARCHAR},
+      salary = #{salary,jdbcType=DOUBLE},
+      did = #{did,jdbcType=INTEGER},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
+    where wid = #{wid,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select wid, worker_name, salary, did, phone_number, email
+    from worker
+    where wid = #{wid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select wid, worker_name, salary, did, phone_number, email
+    from worker
+  </select>
+
+</mapper>

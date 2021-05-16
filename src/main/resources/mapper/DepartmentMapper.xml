@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.combinatorics.midtermproject.dao.DepartmentDao">
+
+  <resultMap id="DepartmentResultMap" type="team.combinatorics.midtermproject.model.po.DepartmentPO">
+    <id column="did" jdbcType="INTEGER" property="did" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from department
+    where did = #{did,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.DepartmentPO">
+    <selectKey keyProperty="did" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into department (department_name)
+    values (#{departmentName,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="team.combinatorics.midtermproject.model.po.DepartmentPO">
+    update department
+    set department_name = #{departmentName,jdbcType=VARCHAR}
+    where did = #{did,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select did, department_name
+    from department
+    where did = #{did,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select did, department_name
+    from department
+  </select>
+
+</mapper>

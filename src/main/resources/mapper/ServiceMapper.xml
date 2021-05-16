@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.combinatorics.midtermproject.dao.ServiceDao">
+
+  <resultMap id="ServiceResultMap" type="team.combinatorics.midtermproject.model.po.ServicePO">
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="service_type" jdbcType="VARCHAR" property="serviceType" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="wid" jdbcType="INTEGER" property="wid" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from after_sale_service
+    where sid = #{sid,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.ServicePO">
+    <selectKey keyProperty="sid" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into after_sale_service (service_type, description, `state`, 
+      wid, pid)
+    values (#{serviceType,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
+      #{wid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="team.combinatorics.midtermproject.model.po.ServicePO">
+    update after_sale_service
+    set service_type = #{serviceType,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=VARCHAR},
+      wid = #{wid,jdbcType=INTEGER},
+      pid = #{pid,jdbcType=INTEGER}
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select sid, service_type, description, `state`, wid, pid
+    from after_sale_service
+    where sid = #{sid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select sid, service_type, description, `state`, wid, pid
+    from after_sale_service
+  </select>
+
+</mapper>
