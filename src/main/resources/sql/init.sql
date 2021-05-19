@@ -106,7 +106,7 @@ CREATE TABLE `manage`
 (
     `did`               INT UNSIGNED               NOT NULL COMMENT '部门id',
     `wid`               INT UNSIGNED               NOT NULL COMMENT '部门经理的员工id',
-    PRIMARY KEY pk_dwid(`did`, `wid`),
+    PRIMARY KEY pk_did(`did`),
     FOREIGN KEY fk_did(`did`) REFERENCES `department`(`did`),
     FOREIGN KEY fk_wid(`wid`) REFERENCES `worker`(`wid`)
 ) ENGINE = InnoDB
