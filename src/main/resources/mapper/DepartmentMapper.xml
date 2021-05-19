@@ -26,13 +26,13 @@
     where did = #{did,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="DepartmentResultMap">
     select did, department_name
     from department
     where did = #{did,jdbcType=INTEGER}
   </select>
 
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectAll" resultMap="DepartmentResultMap">
     select did, department_name
     from department
   </select>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="team.combinatorics.midtermproject.dao.WorkerDao">
 
-  <resultMap id="BaseResultMap" type="team.combinatorics.midtermproject.model.po.WorkerPO">
+  <resultMap id="WorkerResultMap" type="team.combinatorics.midtermproject.model.po.WorkerPO">
     <id column="wid" jdbcType="INTEGER" property="wid" />
     <result column="worker_name" jdbcType="VARCHAR" property="workerName" />
     <result column="salary" jdbcType="DOUBLE" property="salary" />
@@ -36,13 +36,13 @@
     where wid = #{wid,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
     select wid, worker_name, salary, did, phone_number, email
     from worker
     where wid = #{wid,jdbcType=INTEGER}
   </select>
 
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectAll" resultMap="WorkerResultMap">
     select wid, worker_name, salary, did, phone_number, email
     from worker
   </select>

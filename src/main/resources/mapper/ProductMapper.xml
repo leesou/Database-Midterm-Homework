@@ -36,13 +36,13 @@
     where pid = #{pid,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ProductResultMap">
     select pid, product_name, price, sell_time, duration, `uid`
     from product
     where pid = #{pid,jdbcType=INTEGER}
   </select>
 
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectAll" resultMap="ProductResultMap">
     select pid, product_name, price, sell_time, duration, `uid`
     from product
   </select>
