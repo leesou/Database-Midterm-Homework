@@ -11,6 +11,8 @@ import team.combinatorics.midtermproject.dao.UserDao;
 import team.combinatorics.midtermproject.model.po.DepartmentPO;
 import team.combinatorics.midtermproject.model.po.UserPO;
 
+import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = MidtermprojectApplication.class)
 public class DatabaseTest {
@@ -47,7 +49,13 @@ public class DatabaseTest {
         departmentPO.setDepartmentName("testDep123");
         departmentDao.update(departmentPO);
 
-        departmentDao.deleteByPrimaryKey(1);
+        List<DepartmentPO> departmentPOList;
+        departmentPOList = departmentDao.selectAll();
+        for(DepartmentPO dep:departmentPOList)
+            System.out.println(dep.getDepartmentName());
+
+        for(DepartmentPO dep:departmentPOList)
+            departmentDao.deleteByPrimaryKey(dep.getDid());
     }
 
 }
