@@ -7,24 +7,29 @@
     <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
   </resultMap>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from department
-    where did = #{did,jdbcType=INTEGER}
-  </delete>
-
   <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.DepartmentPO">
     <selectKey keyProperty="did" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into department (department_name)
-    values (#{departmentName,jdbcType=VARCHAR})
+    select #{departmentName} from dual
+    where not exists(select department_name from department where department_name = #{departmentName})
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="team.combinatorics.midtermproject.model.po.DepartmentPO">
+  <update id="update" parameterType="team.combinatorics.midtermproject.model.po.DepartmentPO">
     update department
-    set department_name = #{departmentName,jdbcType=VARCHAR}
-    where did = #{did,jdbcType=INTEGER}
+    <trim prefix="SET" suffixOverrides=",">
+        <if test="dep.departmentName != null">
+          department_name = #{dep.departmentName,jdbcType=VARCHAR}
+        </if>
+    </trim>
+    where did = #{dep.did,jdbcType=INTEGER}
   </update>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from department
+    where did = #{did,jdbcType=INTEGER}
+  </delete>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="DepartmentResultMap">
     select did, department_name
