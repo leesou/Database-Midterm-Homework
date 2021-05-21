@@ -15,7 +15,11 @@ public interface WorkerDao {
 
     int deleteByPrimaryKey(Integer wid);
 
+    int deleteByDid(Integer did);
+
     WorkerPO selectByPrimaryKey(Integer wid);
+
+    List<WorkerPO> selectByDid(Integer did);
 
     List<WorkerPO> selectAll();
 

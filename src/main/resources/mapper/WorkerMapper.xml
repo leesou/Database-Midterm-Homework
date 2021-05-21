@@ -49,12 +49,23 @@
     where wid = #{wid,jdbcType=INTEGER}
   </delete>
 
+  <delete id="deleteByDid" parameterType="java.lang.Integer">
+      delete from worker
+      where did = #{did}
+  </delete>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
     select wid, worker_name, salary, did, phone_number, email
     from worker
     where wid = #{wid,jdbcType=INTEGER}
   </select>
 
+  <select id="selectByDid" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
+      select wid, worker_name, salary, did, phone_number, email
+      from worker
+      where did = #{did}
+  </select>
+    
   <select id="selectAll" resultMap="WorkerResultMap">
     select wid, worker_name, salary, did, phone_number, email
     from worker
