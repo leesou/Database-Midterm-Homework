@@ -46,6 +46,8 @@ public class DatabaseTest {
         departmentPO.setDid(1);
         departmentPO.setDepartmentName("testDep123");
         departmentDao.update(departmentPO);
+
+        departmentDao.deleteByPrimaryKey(1);
     }
 
 }
