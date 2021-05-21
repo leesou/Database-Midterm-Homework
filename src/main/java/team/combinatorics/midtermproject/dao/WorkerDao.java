@@ -2,23 +2,23 @@ package team.combinatorics.midtermproject.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import team.combinatorics.midtermproject.model.po.WorkerPO;
 
 @Repository
 public interface WorkerDao {
 
+    int insert(@Param("worker") WorkerPO record);
+
+    int update(@Param("worker") WorkerPO record);
+
     int deleteByPrimaryKey(Integer wid);
 
-
-    int insert(WorkerPO record);
-
-
     WorkerPO selectByPrimaryKey(Integer wid);
-
 
     List<WorkerPO> selectAll();
 
 
-    int updateByPrimaryKey(WorkerPO record);
+
 }
