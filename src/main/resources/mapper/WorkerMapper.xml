@@ -33,7 +33,7 @@
         <if test="worker.did != null">
             did = #{worker.did},
         </if>
-        <if test="phone_number != null">
+        <if test="worker.phoneNumber != null">
             phone_number = #{worker.phoneNumber},
         </if>
         <if test="worker.email != null">
