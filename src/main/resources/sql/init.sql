@@ -92,8 +92,8 @@ CREATE TABLE `after_sale_service`
 DROP TABLE IF EXISTS `employ`;
 CREATE TABLE `employ`
 (
-    `employer_wid`      INT UNSIGNED                 NOT NULL COMMENT '经理的员工id',
     `employee_wid`      INT UNSIGNED                 NOT NULL COMMENT '雇员的员工id',
+    `employer_wid`      INT UNSIGNED                 NOT NULL COMMENT '经理的员工id',
     PRIMARY KEY pk_eewid(`employee_wid`),
     FOREIGN KEY fk_erwid(`employer_wid`) REFERENCES `worker`(`wid`),
     FOREIGN KEY fk_eewid(`employee_wid`) REFERENCES `worker`(`wid`)
