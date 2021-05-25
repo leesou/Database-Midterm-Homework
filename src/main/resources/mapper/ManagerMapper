@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.combinatorics.midtermproject.dao.ManagerDao">
+
+    <insert id="insertManager" parameterType="team.combinatorics.midtermproject.model.po.ManagerPO">
+        insert into manage (did, wid)
+        select #{manager.did}, #{manager.wid} from dual
+        where (#{manager.did} in (select department.did from department)) and
+              (#{manager.wid} in (select worker.wid from worker)) and
+              (#{manager.did} in (select worker.did from worker where worker.wid=#{manager.wid}))
+    </insert>
+
+    <update id="updateManager" parameterType="team.combinatorics.midtermproject.model.po.ManagerPO">
+        update manage
+        set wid = #{manager.wid}
+        where did = #{manager.did} and
+              #{manager.wid} in (select worker.wid from worker) and
+              #{manager.did} in (select worker.did from worker where worker.wid = #{manager.wid})
+    </update>
+
+    <delete id="deleteManager" parameterType="java.lang.Integer">
+        delete from manage
+        where did = #{did}
+    </delete>
+
+
+    <insert id="insertEmploy" parameterType="team.combinatorics.midtermproject.model.po.EmployPO">
+        insert into employ (employee_wid, employer_wid)
+        select #{employ.employee_wid}, #{employ.employer_wid} from dual
+    </insert>
+
+    <update id="updateManagerByEmployee" parameterType="team.combinatorics.midtermproject.model.po.EmployPO">
+        update employ
+        set employer_wid = #{employ.employer_wid}
+        where employee_wid = #{employ.employee.wid}
+    </update>
+
+    <delete id="deleteEmployByEmployer" parameterType="java.lang.Integer>">
+        delete from employ
+        where employer_wid = #{employer_wid}
+    </delete>
+
+    <delete id="deleteEmployByEmployee" parameterType="java.lang.Integer">
+        delete from employ
+        where employee_wid = #{employee_wid}
+    </delete>
+
+    <delete id="deleteEmployByDid" parameterType="java.lang.Integer">
+        delete from employ
+        where employee_wid in (select wid from worker where did = #{did})
+    </delete>
+
+
+
+</mapper>
