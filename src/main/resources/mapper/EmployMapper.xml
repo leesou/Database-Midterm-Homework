@@ -49,5 +49,16 @@
     from employ
   </select>
 
+  <select id="selectByEmplorer" parameterType="java.lang.Integer" resultMap="EmployResultMap">
+    select employee_wid, employer_wid
+    from employ
+    where employer_wid = #{employerWid}
+  </select>
+
+  <select id="countByEmployer" parameterType="java.lang.Integer" resultMap="java.lang.Integer">
+    create view employ_temp as select employee_wid from employ where employer_wid = #{employerWid};
+    select count(*) from employ_temp;
+    drop view employ_temp;
+  </select>
 
 </mapper>

@@ -23,4 +23,8 @@ public interface EmployDao {
 
     List<EmployPO> selectAll();
 
+    List<EmployPO> selectByEmployer(Integer employerWid);
+
+    int countByEmployer(Integer employerWid);
+
 }
