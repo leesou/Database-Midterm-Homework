@@ -20,31 +20,49 @@
     <selectKey keyProperty="pid" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into product (product_name, price, sell_time, 
-      duration, `uid`)
-    values (#{productName,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{sellTime,jdbcType=DATE}, 
-      #{duration,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER})
+    insert into product (product_name, price, sell_time, duration, uid)
+    select #{product.productName}, #{product.price}, #{product.sellTime}, #{product.duration}, #{product.uid}
+    from dual
+    where ( (#{product.uid} is not null) and (#{product.duration} > 0) and (#{product.uid} in (select uid from user)) )
+
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="team.combinatorics.midtermproject.model.po.ProductPO">
+  <update id="update" parameterType="team.combinatorics.midtermproject.model.po.ProductPO">
     update product
-    set product_name = #{productName,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE},
-      sell_time = #{sellTime,jdbcType=DATE},
-      duration = #{duration,jdbcType=INTEGER},
-      `uid` = #{uid,jdbcType=INTEGER}
-    where pid = #{pid,jdbcType=INTEGER}
+    <trim prefix="SET" suffixOverrides=",">
+        <if test="product.duration != null and product.duration > 0">
+            duration = #{product.duration},
+        </if>
+    </trim>
+    where pid = #{product.pid}
+
   </update>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ProductResultMap">
-    select pid, product_name, price, sell_time, duration, `uid`
+    select pid, product_name, price, sell_time, duration, uid
     from product
     where pid = #{pid,jdbcType=INTEGER}
   </select>
 
-  <select id="selectAll" resultMap="ProductResultMap">
-    select pid, product_name, price, sell_time, duration, `uid`
+  <select id="selectByUid" parameterType="java.lang.Integer" resultMap="ProductResultMap">
+    select pid, product_name, price, sell_time, duration, uid
     from product
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+
+  <select id="countByUid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    create view pro_temp as select pid from product where uid = #{uid,jdbcType=INTEGER};
+    select count(*) from pro_temp;
+    drop view pro_temp;
+  </select>
+
+  <select id="selectAll" resultMap="ProductResultMap">
+    select pid, product_name, price, sell_time, duration, uid
+    from product
+  </select>
+
+  <select id="sumMoneyByUid" parameterType="java.lang.Integer" resultType="java.lang.Float">
+    select sum(price) from product where uid = #{uid,jdbcType=INTEGER};
   </select>
 
 </mapper>

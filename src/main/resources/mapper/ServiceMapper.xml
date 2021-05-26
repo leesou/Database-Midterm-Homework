@@ -20,31 +20,68 @@
     <selectKey keyProperty="sid" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into after_sale_service (service_type, description, `state`, 
-      wid, pid)
-    values (#{serviceType,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
-      #{wid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER})
+    insert into after_sale_service (service_type, description, state, wid, pid)
+    select #{service.serviceType}, #{service.description}, #{service.state}, #{service.wid}, #{service.pid}
+    from dual
+    where ( (#{service.wid} in (select wid from worker))
+            and (#{service.pid} in (select pid from product)) )
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="team.combinatorics.midtermproject.model.po.ServicePO">
+  <update id="update" parameterType="team.combinatorics.midtermproject.model.po.ServicePO">
     update after_sale_service
-    set service_type = #{serviceType,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      `state` = #{state,jdbcType=VARCHAR},
-      wid = #{wid,jdbcType=INTEGER},
-      pid = #{pid,jdbcType=INTEGER}
-    where sid = #{sid,jdbcType=INTEGER}
+    <trim prefix="SET" suffixOverrides=",">
+      <if test="service.serviceType != null">
+        service_type = #{service.serviceType},
+      </if>
+      <if test="service.description != null">
+        `description` = #{service.description},
+      </if>
+      <if test="service.state != null">
+        state = #{service.state},
+      </if>
+      <if test="service.wid != null">
+        wid = #{service.wid},
+      </if>
+    </trim>
+    where sid = #{service.sid}
+    and #{service.wid} in (select wid from worker)
   </update>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ServiceResultMap">
-    select sid, service_type, description, `state`, wid, pid
+    select sid, service_type, description, state, wid, pid
     from after_sale_service
     where sid = #{sid,jdbcType=INTEGER}
   </select>
 
   <select id="selectAll" resultMap="ServiceResultMap">
-    select sid, service_type, description, `state`, wid, pid
+    select sid, service_type, description, state, wid, pid
     from after_sale_service
+  </select>
+
+  <select id="selectByUid" parameterType="java.lang.Integer" resultMap="ServiceResultMap">
+    create view serU_temp as select after_sale_service.*, product.uid
+    from after_sale_service left join product on after_sale_service.pid = product.pid;
+    select * from serU_temp where uid = #{uid,jdbcType=INTEGER};
+    drop view serU_temp;
+  </select>
+
+  <select id="countByUid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    create view serU_temp as select after_sale_service.*, product.uid
+    from after_sale_service left join product on after_sale_service.pid = product.pid;
+    select count(*) from serU_temp where uid = #{uid,jdbcType=INTEGER};
+    drop view serU_temp;
+  </select>
+
+  <select id="selectByWid" parameterType="java.lang.Integer" resultMap="ServiceResultMap">
+    select sid, service_type, description, state, wid, pid
+    from after_sale_service
+    where wid = #{wid,jdbcType=INTEGER}
+  </select>
+
+  <select id="countByWid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    create view serW_temp as select sid from after_sale_service where wid = #{wid,jdbcType=INTEGER};
+    select count(*) from serW_temp;
+    drop view serW_temp;
   </select>
 
 </mapper>

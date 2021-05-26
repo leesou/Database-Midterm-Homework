@@ -2,47 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="team.combinatorics.midtermproject.dao.UserDao">
 
-  <resultMap id="UserResultMap" type="team.combinatorics.midtermproject.model.po.UserPO">
-    <id column="uid" jdbcType="INTEGER" property="uid" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-  </resultMap>
+    <resultMap id="UserResultMap" type="team.combinatorics.midtermproject.model.po.UserPO">
+        <id column="uid" jdbcType="INTEGER" property="uid" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+    </resultMap>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from user
-    where `uid` = #{uid,jdbcType=INTEGER}
-  </delete>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from user
+        where uid = #{uid,jdbcType=INTEGER}
+    </delete>
 
-  <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.UserPO">
-    <selectKey keyProperty="uid" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into user (user_name, address, phone_number, 
-      email)
-    values (#{userName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR})
-  </insert>
+    <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.UserPO">
+        <selectKey keyProperty="uid" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into user (user_name, address, phone_number, email)
+        values (#{user.userName,jdbcType=VARCHAR}, #{user.address,jdbcType=VARCHAR}, #{user.phoneNumber,jdbcType=VARCHAR},
+        #{user.email,jdbcType=VARCHAR})
+    </insert>
 
-  <update id="updateByPrimaryKey" parameterType="team.combinatorics.midtermproject.model.po.UserPO">
-    update user
-    set user_name = #{userName,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      phone_number = #{phoneNumber,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR}
-    where `uid` = #{uid,jdbcType=INTEGER}
-  </update>
+    <update id="update" parameterType="team.combinatorics.midtermproject.model.po.UserPO">
+        update user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test = "user.userName != null">
+                user_name = #{user.userName},
+            </if>
+            <if test = "user.address != null">
+                address = #{user.address},
+            </if>
+            <if test = "user.phoneNumber != null">
+                phone_number = #{user.phoneNumber},
+            </if>
+            <if test = "user.email != null">
+                email = #{user.email},
+            </if>
+        </trim>
+        where uid = #{user.uid}
+    </update>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="UserResultMap">
-    select `uid`, user_name, address, phone_number, email
-    from user
-    where `uid` = #{uid,jdbcType=INTEGER}
-  </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="UserResultMap">
+        select uid, user_name, address, phone_number, email
+        from user
+        where uid = #{uid,jdbcType=INTEGER}
+    </select>
 
-  <select id="selectAll" resultMap="UserResultMap">
-    select `uid`, user_name, address, phone_number, email
-    from user
-  </select>
+    <select id="selectAll" resultMap="UserResultMap">
+        select uid, user_name, address, phone_number, email
+        from user
+    </select>
 
 </mapper>
