@@ -8,12 +8,12 @@
   </resultMap>
 
   <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.DepartmentPO">
-    <selectKey keyProperty="did" order="AFTER" resultType="java.lang.Integer">
+    <selectKey keyProperty="dep.did" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into department (department_name)
-    select #{departmentName} from dual
-    where not exists(select department_name from department where department_name = #{departmentName})
+    select #{dep.departmentName} from dual
+    where not exists(select department_name from department where department_name = #{dep.departmentName})
   </insert>
 
   <update id="update" parameterType="team.combinatorics.midtermproject.model.po.DepartmentPO">

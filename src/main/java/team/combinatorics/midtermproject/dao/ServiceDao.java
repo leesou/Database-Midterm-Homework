@@ -26,4 +26,8 @@ public interface ServiceDao {
     List<ServicePO> selectByWid(Integer wid);
 
     int countByWid(Integer wid);
+
+    List<ServicePO> selectByDid(Integer did);
+
+    int countByDid(Integer did);
 }

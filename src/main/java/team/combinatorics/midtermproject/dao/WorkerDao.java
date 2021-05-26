@@ -23,6 +23,6 @@ public interface WorkerDao {
 
     List<WorkerPO> selectAll();
 
-
+    int countByDid(Integer did);
 
 }

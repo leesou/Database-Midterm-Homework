@@ -84,4 +84,16 @@
     drop view serW_temp;
   </select>
 
+  <select id="selectByDid" parameterType="java.lang.Integer" resultMap="ServiceResultMap">
+    select sid, service_type, description, state, wid, pid
+    from after_sale_service
+    where wid in (select wid from worker where did = #{did})
+  </select>
+
+  <select id="countByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    create view serD_temp as select sid from after_sale_service where wid in (select wid from worker where did = #{did});
+    select count(*) from serD_temp;
+    drop view serD_temp;
+  </select>
+
 </mapper>
