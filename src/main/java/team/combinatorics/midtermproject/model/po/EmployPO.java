@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployPO {
-    private Integer employee_wid;
-    private Integer employer_wid;
+
+    private Integer employeeWid;
+    private Integer employerWid;
+
 }

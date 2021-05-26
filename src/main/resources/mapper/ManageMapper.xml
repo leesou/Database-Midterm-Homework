@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.combinatorics.midtermproject.dao.ManageDao">
+
+  <resultMap id="ManageResultMap" type="team.combinatorics.midtermproject.model.po.ManagePO">
+    <id column="did" jdbcType="INTEGER" property="did" />
+    <result column="manager_wid" jdbcType="INTEGER" property="managerWid" />
+  </resultMap>
+
+  <insert id="insertManager" parameterType="team.combinatorics.midtermproject.model.po.ManagePO">
+    insert into manage (did, manager_wid)
+    select #{manager.did}, #{manager.managerWid} from dual
+    where (#{manager.did} in (select department.did from department)) and
+      (#{manager.managerWid} in (select worker.wid from worker)) and
+      (#{manager.did} in (select worker.did from worker where worker.wid=#{manager.managerWid}))
+  </insert>
+
+  <update id="updateManager" parameterType="team.combinatorics.midtermproject.model.po.ManagePO">
+    update manage
+    set manager_wid = #{manager.manager_wid}
+    where did = #{manager.did} and
+      #{manager.managerWid} in (select worker.wid from worker) and
+        #{manager.managerWid} in (select worker.did from worker where worker.wid = #{manager.managerWid})
+  </update>
+
+  <delete id="deleteManager" parameterType="java.lang.Integer">
+    delete from manage
+    where did = #{did}
+  </delete>
+
+  <select id="selectByDid" parameterType="java.lang.Integer" resultMap="ManageResultMap">
+    select did, manager_wid
+    from manage
+    where did = #{did,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="ManageResultMap">
+    select did, manager_wid
+    from manage
+  </select>
+
+</mapper>

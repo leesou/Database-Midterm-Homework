@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.combinatorics.midtermproject.dao.EmployDao">
+
+  <resultMap id="EmployResultMap" type="team.combinatorics.midtermproject.model.po.EmployPO">
+    <id column="employee_wid" jdbcType="INTEGER" property="employeeWid" />
+    <result column="employer_wid" jdbcType="INTEGER" property="employerWid" />
+  </resultMap>
+
+
+  <insert id="insertEmploy" parameterType="team.combinatorics.midtermproject.model.po.EmployPO">
+    insert into employ (employee_wid, employer_wid)
+    select #{employ.employeeWid}, #{employ.employerWid} from dual
+    where #{employ.employeeWid} in (select wid from worker)
+          and #{employ.employerWid} in (select wid from worker)
+  </insert>
+
+
+  <update id="updateByEmployee" parameterType="team.combinatorics.midtermproject.model.po.EmployPO">
+    update employ
+    set employer_wid = #{employ.employerWid}
+    where employee_wid = #{employ.employeeWid}
+  </update>
+
+  <delete id="deleteByEmployer" parameterType="java.lang.Integer">
+    delete from employ
+    where employer_wid = #{employerWid}
+  </delete>
+
+  <delete id="deleteByEmployee" parameterType="java.lang.Integer">
+    delete from employ
+    where employee_wid = #{employeeWid}
+  </delete>
+
+  <delete id="deleteByDid" parameterType="java.lang.Integer">
+    delete from employ
+    where employee_wid in (select wid from worker where did = #{did})
+  </delete>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="EmployResultMap">
+    select employee_wid, employer_wid
+    from employ
+    where employee_wid = #{employeeWid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="EmployResultMap">
+    select employee_wid, employer_wid
+    from employ
+  </select>
+
+
+</mapper>

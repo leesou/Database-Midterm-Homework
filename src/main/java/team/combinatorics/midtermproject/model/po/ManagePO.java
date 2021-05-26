@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ManagerPO {
+public class ManagePO {
 
     private Integer did;
-    private Integer wid;
+    private Integer managerWid;
 
 }
