@@ -2,23 +2,6 @@ DROP DATABASE IF EXISTS `midtermproj`;
 CREATE DATABASE `midtermproj` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `midtermproj`;
 
-DROP TABLE IF EXISTS `test_table`;
-CREATE TABLE `test_table`
-(
-    `id`            INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '自增长id',
-    `user_name`     VARCHAR(100)                NOT NULL COMMENT '用户名',
-    `password`      VARCHAR(100)                NOT NULL COMMENT '用户密码',
-    PRIMARY KEY pk_id (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
-
-
-
-
-
-
-
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
@@ -105,10 +88,25 @@ DROP TABLE IF EXISTS `manage`;
 CREATE TABLE `manage`
 (
     `did`               INT UNSIGNED               NOT NULL COMMENT '部门id',
-    `wid`               INT UNSIGNED               NOT NULL COMMENT '部门经理的员工id',
+    `manager_wid`               INT UNSIGNED               NOT NULL COMMENT '部门经理的员工id',
     PRIMARY KEY pk_did(`did`),
     FOREIGN KEY fk_did(`did`) REFERENCES `department`(`did`),
-    FOREIGN KEY fk_wid(`wid`) REFERENCES `worker`(`wid`)
+    FOREIGN KEY fk_wid(`manager_wid`) REFERENCES `worker`(`wid`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET =utf8mb4
   COLLATE = utf8mb4_general_ci;
+
+-- 添加worker的同时也要添加employ，用触发器实现
+-- 即使添加的是一个manager，因为是先insert worker，再insert manage，所以不会出问题
+CREATE TRIGGER `worker_insert_trigger` AFTER INSERT
+    ON `worker` FOR EACH ROW
+        INSERT INTO `employ`
+        SELECT `worker`.`wid`, `manage`.`manager_wid` FROM `worker`, `manage`
+        WHERE `worker`.`wid` = NEW.wid AND `worker`.`did` = `manage`.`did`;
+
+-- 删除worker的同时也要删除employ，用触发器实现
+-- 由于manager在employ内不会出现到employee_wid内，所以删manager时不会产生影响
+CREATE TRIGGER `worker_delete_trigger` BEFORE DELETE
+    ON `worker` FOR EACH ROW
+        DELETE FROM `employ`
+        WHERE `employ`.`employee_wid` = OLD.`wid`;
