@@ -55,7 +55,7 @@
     where employer_wid = #{employerWid}
   </select>
 
-  <select id="countByEmployer" parameterType="java.lang.Integer" resultMap="java.lang.Integer">
+  <select id="countByEmployer" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     create view employ_temp as select employee_wid from employ where employer_wid = #{employerWid};
     select count(*) from employ_temp;
     drop view employ_temp;

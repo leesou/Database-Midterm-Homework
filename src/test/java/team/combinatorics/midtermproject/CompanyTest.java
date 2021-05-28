@@ -36,12 +36,14 @@ public class CompanyTest {
         DepartmentPO departmentPO = DepartmentPO.builder().
                                         departmentName("dep1").
                                         build();
-        departmentDao.insert(departmentPO);
+        int num1 = departmentDao.insert(departmentPO);
         // 检查主码填充情况
         System.out.println(departmentPO.getDid());
+        System.out.println(num1);
 
         // 测试不会插入同名department
-        departmentDao.insert(departmentPO);
+        int num2 = departmentDao.insert(departmentPO);
+        System.out.println(num2);
 
         // 测试修改department名称
         departmentPO.setDepartmentName("changeddep1");
