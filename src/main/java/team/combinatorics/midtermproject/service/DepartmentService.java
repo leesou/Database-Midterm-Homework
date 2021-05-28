@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface DepartmentService {
 
-    void addNewDepartment(DepartmentDTO departmentDTO);
+    Integer addNewDepartment(DepartmentDTO departmentDTO);
 
     void updateDepartment(DepartmentDTO departmentDTO);
 

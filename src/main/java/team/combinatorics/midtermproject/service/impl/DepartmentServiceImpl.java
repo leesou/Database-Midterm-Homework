@@ -29,8 +29,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final ManageDao manageDao;
     private final WorkerDao workerDao;
 
+    // 返回did给前端
     @Override
-    public void addNewDepartment(DepartmentDTO departmentDTO) {
+    public Integer addNewDepartment(DepartmentDTO departmentDTO) {
         System.out.println("[添加部门]部门名称："+departmentDTO.getDepartmentName());
         DepartmentPO departmentPO = DepartmentPO.builder().
                                         departmentName(departmentDTO.getDepartmentName()).
@@ -39,6 +40,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         if(num<1 || departmentPO.getDid()==null)
             throw new KnownException(ErrorInfoEnum.DEPARTMENT_INSERT_ERR);
         System.out.println("[添加部门]部门id："+departmentDTO.getDid());
+        return departmentDTO.getDid();
     }
 
     @Override
