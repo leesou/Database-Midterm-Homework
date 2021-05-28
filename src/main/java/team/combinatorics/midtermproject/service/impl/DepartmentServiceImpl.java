@@ -46,6 +46,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void updateDepartment(DepartmentDTO departmentDTO) {
         System.out.println("[更新部门]部门id："+departmentDTO.getDid().toString()+"，新的部门名称："+departmentDTO.getDepartmentName());
+        if(departmentDTO.getDid()==null)
+            throw new KnownException(ErrorInfoEnum.DEPARTMENT_UPDATE_ERR);
         DepartmentPO departmentPO = DepartmentPO.builder().
                                         did(departmentDTO.getDid()).
                                         departmentName(departmentDTO.getDepartmentName()).
@@ -164,9 +166,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
 
         Integer workerNum = workerDao.countByDid(did);
-        Float workerAvgSalary = workerDao.calculateAvgSalaryByDid(did);
+        Double workerAvgSalary = workerDao.calculateAvgSalaryByDid(did);
         if(workerAvgSalary==null)
-            workerAvgSalary = 0f;
+            workerAvgSalary = 0.;
 
         return AllWorkerDTO.builder().
                 allWorker(workerDTOs).

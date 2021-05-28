@@ -91,7 +91,13 @@
     drop view workerD_temp;
   </select>
 
-  <select id="calculateAvgSalaryByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  <select id="calculateAllAvgSalary" resultType="java.lang.Double">
+     create view salaryD_temp as (select salary from worker);
+     select avg(all salaryD_temp.salary) from salaryD_temp;
+     drop view salaryD_temp
+  </select>
+
+  <select id="calculateAvgSalaryByDid" parameterType="java.lang.Integer" resultType="java.lang.Double">
       create view salaryD_temp as (select salary from worker where did = #{did});
       select avg(all salaryD_temp.salary) from salaryD_temp;
       drop view salaryD_temp

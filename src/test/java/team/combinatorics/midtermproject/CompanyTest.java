@@ -60,7 +60,7 @@ public class CompanyTest {
         // 测试查询department
         DepartmentPO result = departmentDao.selectByPrimaryKey(departmentPO.getDid());
         DepartmentPO result1 = departmentDao.selectByPrimaryKey(departmentPO1.getDid());
-        Float avgSalary = workerDao.calculateAvgSalaryByDid(departmentPO1.getDid());
+        Double avgSalary = workerDao.calculateAvgSalaryByDid(departmentPO1.getDid());
 
         // 测试删除单个department
         int num5 = departmentDao.deleteByPrimaryKey(departmentPO.getDid());

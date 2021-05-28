@@ -14,5 +14,5 @@ import java.util.List;
 public class AllWorkerDTO {
     private List<WorkerDTO> allWorker;
     private Integer allWorkerNum;
-    private Float allWorkerAvgSalary;
+    private Double allWorkerAvgSalary;
 }
