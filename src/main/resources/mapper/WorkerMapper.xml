@@ -63,9 +63,12 @@
   </select>
 
   <select id="selectByDid" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
+      create index name_wid_index on worker(worker_name, wid);
       select wid, worker_name, salary, did, phone_number, email
       from worker
       where did = #{did}
+      order by (worker_name, wid);
+      alter table worker drop index name_wid_index;
   </select>
 
   <select id="countByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -75,8 +78,17 @@
   </select>
 
   <select id="selectAll" resultMap="WorkerResultMap">
+    create index did_wid_index on worker(did, wid);
     select wid, worker_name, salary, did, phone_number, email
     from worker
+    order by (did, wid);
+    alter table worker drop index did_wid_index;
+  </select>
+
+  <select id="countAll" resultType="java.lang.Integer">
+    create view workerD_temp as select wid from worker;
+    select count(*) from workerD_temp;
+    drop view workerD_temp;
   </select>
 
   <select id="calculateAvgSalaryByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">

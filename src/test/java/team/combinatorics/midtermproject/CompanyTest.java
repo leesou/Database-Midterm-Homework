@@ -47,10 +47,27 @@ public class CompanyTest {
 
         // 测试修改department名称
         departmentPO.setDepartmentName("changeddep1");
-        departmentDao.update(departmentPO);
+        int num3 = departmentDao.update(departmentPO);
+        System.out.println(num3);
+
+        DepartmentPO departmentPO1 = DepartmentPO.builder().
+                did(114).
+                departmentName("dep1").
+                build();
+        int num4 = departmentDao.update(departmentPO1);
+        System.out.println(num4);
+
+        // 测试查询department
+        DepartmentPO result = departmentDao.selectByPrimaryKey(departmentPO.getDid());
+        DepartmentPO result1 = departmentDao.selectByPrimaryKey(departmentPO1.getDid());
+        Float avgSalary = workerDao.calculateAvgSalaryByDid(departmentPO1.getDid());
 
         // 测试删除单个department
-        departmentDao.deleteByPrimaryKey(departmentPO.getDid());
+        int num5 = departmentDao.deleteByPrimaryKey(departmentPO.getDid());
+        System.out.println(num5);
+
+        int num6 = departmentDao.deleteByPrimaryKey(departmentPO1.getDid());
+        System.out.println(num6);
 
     }
 

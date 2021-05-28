@@ -20,6 +20,6 @@ public interface DepartmentDao {
 
     List<DepartmentPO> selectAll();
 
-
+    Integer countAll();
 
 }

@@ -43,4 +43,8 @@
     from department
   </select>
 
+  <select id="countAll" resultType="java.lang.Integer">
+    select count(*) from (select did from department) as dd
+  </select>
+
 </mapper>

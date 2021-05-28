@@ -25,4 +25,8 @@ public interface WorkerDao {
 
     int countByDid(Integer did);
 
+    int countAll();
+
+    Float calculateAvgSalaryByDid(Integer did);
+
 }
