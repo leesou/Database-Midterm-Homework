@@ -78,11 +78,9 @@
   </select>
 
   <select id="selectAll" resultMap="WorkerResultMap">
-    create index did_wid_index on worker(did, wid);
     select wid, worker_name, salary, did, phone_number, email
     from worker
-    order by (did, wid);
-    alter table worker drop index did_wid_index;
+    order by (did);
   </select>
 
   <select id="countAll" resultType="java.lang.Integer">

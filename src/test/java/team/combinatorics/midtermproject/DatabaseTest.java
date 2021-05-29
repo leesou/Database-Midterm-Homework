@@ -91,6 +91,8 @@ public class DatabaseTest {
 
          */
 
+        List<ServicePO> dep1 = serviceDao.selectByDid(1);
+
         List<ServicePO> user3 = serviceDao.selectByUid(3);
         if(user3.isEmpty()){
             System.out.println("3 bought nothing");

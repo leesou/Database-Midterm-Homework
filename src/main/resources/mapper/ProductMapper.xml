@@ -67,11 +67,11 @@
   </select>
 
   <select id="selectAll" resultMap="ProductResultMap">
-    create index uid_price_index on product(uid, price);
+    create index price_index on product(price);
     select pid, product_name, price, sell_time, duration, uid
     from product
     order by (uid, price);
-    alter table product drop index uid_price_index;
+    alter table product drop index price_index;
   </select>
 
   <select id="sumMoneyByUid" parameterType="java.lang.Integer" resultType="java.lang.Double">
