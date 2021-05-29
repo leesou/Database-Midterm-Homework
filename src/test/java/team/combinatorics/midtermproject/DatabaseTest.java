@@ -69,7 +69,7 @@ public class DatabaseTest {
         for(ProductPO p:pro){
             System.out.println(p);
         }
-        float sum = productDao.sumMoneyByUid(4);
+        Double sum = productDao.sumMoneyByUid(4);
         System.out.println(sum);
     }
 
