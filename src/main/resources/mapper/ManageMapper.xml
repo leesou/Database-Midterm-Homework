@@ -23,9 +23,15 @@
         #{manager.managerWid} in (select worker.did from worker where worker.wid = #{manager.managerWid})
   </update>
 
+
   <delete id="deleteManager" parameterType="java.lang.Integer">
     delete from manage
     where did = #{did}
+  </delete>
+
+  <delete id="deleteManagerByWid" parameterType="java.lang.Integer">
+    delete from manage
+    where manager_wid = #{wid}
   </delete>
 
   <select id="selectByDid" parameterType="java.lang.Integer" resultMap="ManageResultMap">
@@ -37,6 +43,11 @@
   <select id="selectAll" resultMap="ManageResultMap">
     select did, manager_wid
     from manage
+    order by did
+  </select>
+
+  <select id="countAll" resultType="java.lang.Integer">
+    select count(*) from (select manager_wid from manage) as md
   </select>
 
 </mapper>

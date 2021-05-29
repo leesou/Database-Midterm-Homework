@@ -15,8 +15,12 @@ public interface ManageDao {
 
     int deleteManager(Integer did);
 
+    int deleteManagerByWid(Integer wid);
+
     ManagePO selectByDid(Integer did);
 
     List<ManagePO> selectAll();
+
+    Integer countAll();
 
 }

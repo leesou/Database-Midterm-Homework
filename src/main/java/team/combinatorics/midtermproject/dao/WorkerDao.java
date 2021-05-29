@@ -21,6 +21,8 @@ public interface WorkerDao {
 
     List<WorkerPO> selectByDid(Integer did);
 
+    List<WorkerPO> selectByManager(Integer wid);
+
     List<WorkerPO> selectAll();
 
     Integer countByDid(Integer did);
@@ -28,6 +30,10 @@ public interface WorkerDao {
     Integer countAll();
 
     Double calculateAvgSalaryByDid(Integer did);
+
+    Double calculateAvgSalaryByManager(Integer wid);
+
+    Double calculateAvgManagerSalary();
 
     Double calculateAllAvgSalary();
 

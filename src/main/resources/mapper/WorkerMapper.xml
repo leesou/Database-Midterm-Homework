@@ -63,12 +63,21 @@
   </select>
 
   <select id="selectByDid" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
-      create index name_wid_index on worker(worker_name, wid);
+      create index name_index on worker(worker_name);
       select wid, worker_name, salary, did, phone_number, email
       from worker
       where did = #{did}
+      order by (worker_name);
+      alter table worker drop index name_index;
+  </select>
+
+  <select id="selectByManager" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
+      create index name_index on worker(worker_name);
+      select wid, worker_name, salary, did, phone_number, email
+      from worker
+      where wid in (select employee_wid from employ where employer_wid = #{wid})
       order by (worker_name, wid);
-      alter table worker drop index name_wid_index;
+      alter table worker drop index name_index;
   </select>
 
   <select id="countByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -90,15 +99,27 @@
   </select>
 
   <select id="calculateAllAvgSalary" resultType="java.lang.Double">
-     create view salaryD_temp as (select salary from worker);
-     select avg(all salaryD_temp.salary) from salaryD_temp;
-     drop view salaryD_temp
+     create view salaryAll_temp as (select salary from worker);
+     select avg(all salaryAll_temp.salary) from salaryAll_temp;
+     drop view salaryAll_temp
   </select>
 
   <select id="calculateAvgSalaryByDid" parameterType="java.lang.Integer" resultType="java.lang.Double">
       create view salaryD_temp as (select salary from worker where did = #{did});
       select avg(all salaryD_temp.salary) from salaryD_temp;
       drop view salaryD_temp
+  </select>
+
+  <select id="calculateAvgSalaryByManager" parameterType="java.lang.Integer" resultType="java.lang.Double">
+      create view salaryM_temp as (select salary from worker where wid in (select employee_wid from employ where employer_wid = #{wid}));
+      select avg(all salaryM_temp.salary) from salaryM_temp;
+      drop view salaryM_temp
+  </select>
+
+  <select id="calculateAvgManagerSalary" resultType="java.lang.Double">
+      create view salaryAllM_temp as (select salary from worker where wid in (select manager_wid from manage));
+      select avg(all salaryAllM_temp.salary) from salaryAllM_temp;
+      drop view salaryAllM_temp
   </select>
 
 </mapper>

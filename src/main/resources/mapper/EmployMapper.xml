@@ -15,11 +15,23 @@
           and #{employ.employerWid} in (select wid from worker)
   </insert>
 
+  <insert id="insertEmployByManager" parameterType="team.combinatorics.midtermproject.model.po.ManagePO">
+    insert into employ (employee_wid, employer_wid)
+    select #{manager.managerWid}, wid from dual, worker
+    where did = #{manager.did} and wid != #{manager.managerWid}
+  </insert>
+
 
   <update id="updateByEmployee" parameterType="team.combinatorics.midtermproject.model.po.EmployPO">
     update employ
     set employer_wid = #{employ.employerWid}
     where employee_wid = #{employ.employeeWid}
+  </update>
+
+  <update id="updateByManager" parameterType="team.combinatorics.midtermproject.model.po.ManagePO">
+    update employ
+    set employer_wid = #{manager.managerWid}
+    where employee_wid in (select wid from worker where did = #{manager.did})
   </update>
 
   <delete id="deleteByEmployer" parameterType="java.lang.Integer">

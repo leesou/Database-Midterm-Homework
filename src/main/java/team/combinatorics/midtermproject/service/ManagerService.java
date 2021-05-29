@@ -10,7 +10,7 @@ public interface ManagerService {
 
     void changeWorkerToManager(ManageDTO manageDTO);
 
-    void updateManager(Integer wid);
+    void updateManager(WorkerDTO workerDTO);
 
     void deleteManager(Integer wid);
 
