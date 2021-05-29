@@ -1,6 +1,7 @@
 package team.combinatorics.midtermproject.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
@@ -23,9 +24,11 @@ public interface ProductDao {
 
     List<ProductPO> selectByUid(Integer uid);
 
-    int countByUid(Integer uid);
+    Integer countByUid(Integer uid);
 
-    float sumMoneyByUid(Integer uid);
+    Double sumMoneyByUid(Integer uid);
 
     List<ProductPO> selectAll();
+
+    List<Map> sumAllMoney();
 }

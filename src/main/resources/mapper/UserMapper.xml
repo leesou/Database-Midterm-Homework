@@ -16,7 +16,7 @@
     </delete>
 
     <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.UserPO">
-        <selectKey keyProperty="uid" order="AFTER" resultType="java.lang.Integer">
+        <selectKey keyProperty="user.uid" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into user (user_name, address, phone_number, email)

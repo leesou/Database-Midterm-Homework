@@ -11,6 +11,11 @@
     <result column="uid" jdbcType="INTEGER" property="uid" />
   </resultMap>
 
+  <resultMap id="MoneyMap" type="java.util.Map">
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="sum(price)" property="total_money" jdbcType="VARCHAR" />
+  </resultMap>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from product
     where pid = #{pid,jdbcType=INTEGER}
@@ -22,7 +27,7 @@
   </delete>
 
   <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.ProductPO">
-    <selectKey keyProperty="pid" order="AFTER" resultType="java.lang.Integer">
+    <selectKey keyProperty="product.pid" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into product (product_name, price, sell_time, duration, uid)
@@ -62,12 +67,21 @@
   </select>
 
   <select id="selectAll" resultMap="ProductResultMap">
+    create index uid_price_index on product(uid, price);
     select pid, product_name, price, sell_time, duration, uid
     from product
+    order by (uid, price);
+    alter table product drop index uid_price_index;
   </select>
 
-  <select id="sumMoneyByUid" parameterType="java.lang.Integer" resultType="java.lang.Float">
+  <select id="sumMoneyByUid" parameterType="java.lang.Integer" resultType="java.lang.Double">
     select sum(price) from product where uid = #{uid,jdbcType=INTEGER};
+  </select>
+  
+  <select id="sumAllMoney" resultMap="MoneyMap">
+    select uid, sum(price) from product
+    group by uid
+    order by uid
   </select>
 
 </mapper>

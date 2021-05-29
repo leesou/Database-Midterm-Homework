@@ -23,7 +23,10 @@ public enum  ErrorInfoEnum {
     USER_UPDATE_ERROR(40014, "更新用户信息时出错，请检查uid是否正确"),
     USER_DELETE_ERROR(40015, "删除用户时出错，请检查uid是否正确"),
     USER_SELECT_ERROR(40016, "查询用户时出错，请检查uid是否正确"),
-    ;
+    PRODUCT_INSERT_ERROR(40017, "添加商品时出错，请检查uid和保修时间是否正确"),
+    PRODUCT_UPDATE_ERROR(40018, "更新商品信息时出错，请检查pid和保修时间是否正确"),
+    PRODUCT_DELETE_ERROR(40019, "删除商品时出错，请检查pid是否正确"),
+    PRODUCT_SELECT_ERROR(40020, "查询商品时出错，请检查pid是否正确");
 
     private final Integer errCode;
     private final String errMsg;

@@ -17,6 +17,8 @@ public interface ServiceDao {
 
     int deleteByUid(Integer uid);
 
+    int deleteByPid(Integer pid);
+
     ServicePO selectByPrimaryKey(Integer uid);
 
     List<ServicePO> selectAll();
