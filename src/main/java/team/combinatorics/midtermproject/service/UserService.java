@@ -1,7 +1,8 @@
 package team.combinatorics.midtermproject.service;
 
-import org.apache.catalina.User;
 import team.combinatorics.midtermproject.model.dto.UserDTO;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -12,5 +13,7 @@ public interface UserService {
     void deleteUserByUid(Integer uid);
 
     UserDTO getUserByUid(Integer uid);
+
+    List<UserDTO> getAllUser();
 
 }

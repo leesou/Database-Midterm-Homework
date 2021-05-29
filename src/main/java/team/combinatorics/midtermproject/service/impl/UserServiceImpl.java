@@ -2,6 +2,9 @@ package team.combinatorics.midtermproject.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import team.combinatorics.midtermproject.dao.ProductDao;
+import team.combinatorics.midtermproject.dao.ServiceDao;
 import team.combinatorics.midtermproject.dao.UserDao;
 import team.combinatorics.midtermproject.exception.ErrorInfoEnum;
 import team.combinatorics.midtermproject.exception.KnownException;
@@ -9,10 +12,15 @@ import team.combinatorics.midtermproject.model.dto.UserDTO;
 import team.combinatorics.midtermproject.model.po.UserPO;
 import team.combinatorics.midtermproject.service.UserService;
 
+import java.util.List;
+import java.util.Vector;
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
+    private final ProductDao productDao;
+    private final ServiceDao serviceDao;
 
     // 添加用户
     @Override
@@ -49,9 +57,18 @@ public class UserServiceImpl implements UserService {
     }
 
     // 删除用户
+    // 同时删除用户的service和product
     @Override
+    @Transactional
     public void deleteUserByUid(Integer uid) {
         System.out.println("[删除用户]用户id为："+uid.toString());
+
+        int num_service = serviceDao.deleteByUid(uid);
+        System.out.println("[删除用户]删除售后服务次数："+num_service);
+
+        int num_product = productDao.deleteByUid(uid);
+        System.out.println("[删除用户]删除购买产品数"+num_product);
+
         int num = userDao.deleteByPrimaryKey(uid);
         if(num<1)
             throw new KnownException(ErrorInfoEnum.USER_DELETE_ERROR);
@@ -72,6 +89,23 @@ public class UserServiceImpl implements UserService {
                     phoneNumber(userPO.getPhoneNumber()).
                     email(userPO.getEmail()).
                     build();
+    }
+
+    @Override
+    public List<UserDTO> getAllUser() {
+        List<UserPO> userPOList = userDao.selectAll();
+        List<UserDTO> userDTOList = new Vector<>();
+        for(UserPO userPO:userPOList) {
+            UserDTO userDTO = UserDTO.builder().
+                    uid(userPO.getUid()).
+                    userName(userPO.getUserName()).
+                    address(userPO.getAddress()).
+                    phoneNumber(userPO.getPhoneNumber()).
+                    email(userPO.getEmail()).
+                    build();
+            userDTOList.add(userDTO);
+        }
+        return userDTOList;
     }
 
 }

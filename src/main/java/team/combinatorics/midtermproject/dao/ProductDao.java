@@ -17,6 +17,8 @@ public interface ProductDao {
 
     int deleteByPrimaryKey(Integer pid);
 
+    int deleteByUid(Integer uid);
+
     ProductPO selectByPrimaryKey(Integer pid);
 
     List<ProductPO> selectByUid(Integer uid);

@@ -16,6 +16,11 @@
     where sid = #{sid,jdbcType=INTEGER}
   </delete>
 
+  <delete id="deleteByUid" parameterType="java.lang.Integer">
+    delete from after_sale_service
+    where pid in (select pid from product where product.uid=#{uid})
+  </delete>
+
   <insert id="insert" parameterType="team.combinatorics.midtermproject.model.po.ServicePO">
     <selectKey keyProperty="sid" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
