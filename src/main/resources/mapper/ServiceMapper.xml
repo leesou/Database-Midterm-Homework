@@ -68,10 +68,15 @@
     from after_sale_service
   </select>
 
+  <select id="countAll" resultType="java.lang.Integer">
+    select count(*) from after_sale_service
+  </select>
+
   <select id="selectByUid" parameterType="java.lang.Integer" resultMap="ServiceResultMap">
     create view serU_temp as select after_sale_service.*, product.uid
     from after_sale_service left join product on after_sale_service.pid = product.pid;
-    select * from serU_temp where uid = #{uid,jdbcType=INTEGER};
+    create index pid_index on serU_temp(pid);
+    select * from serU_temp where uid = #{uid,jdbcType=INTEGER} order by (pid);
     drop view serU_temp;
   </select>
 
@@ -83,9 +88,12 @@
   </select>
 
   <select id="selectByWid" parameterType="java.lang.Integer" resultMap="ServiceResultMap">
+    create index pid_index on after_sale_service(pid);
     select sid, service_type, description, state, wid, pid
     from after_sale_service
     where wid = #{wid,jdbcType=INTEGER}
+    order by (pid);
+    alter table after_sale_service drop index pid_index;
   </select>
 
   <select id="countByWid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -95,9 +103,12 @@
   </select>
 
   <select id="selectByDid" parameterType="java.lang.Integer" resultMap="ServiceResultMap">
+    create index wid_pid_index on after_sale_service(wid, pid);
     select sid, service_type, description, state, wid, pid
     from after_sale_service
     where wid in (select wid from worker where did = #{did})
+    order by (wid, pid);
+    alter table after_sale_service drop index wid_pid_index;
   </select>
 
   <select id="countByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">

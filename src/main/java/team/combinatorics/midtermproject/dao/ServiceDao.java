@@ -13,15 +13,17 @@ public interface ServiceDao {
 
     int update(@Param("service") ServicePO record);
 
-    int deleteByPrimaryKey(Integer uid);
+    int deleteByPrimaryKey(Integer sid);
 
     int deleteByUid(Integer uid);
 
     int deleteByPid(Integer pid);
 
-    ServicePO selectByPrimaryKey(Integer uid);
+    ServicePO selectByPrimaryKey(Integer sid);
 
     List<ServicePO> selectAll();
+
+    int countAll();
 
     List<ServicePO> selectByUid(Integer uid);
 

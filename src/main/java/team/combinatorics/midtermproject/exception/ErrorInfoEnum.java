@@ -16,9 +16,9 @@ public enum  ErrorInfoEnum {
     WORKER_DELETE_ERROR(40007, "删除员工时出错，请检查员工wid是否正确"),
     WORKER_SELECT_ERROR(40008, "查询员工时出错，请检查员工wid是否正确"),
     MANAGER_INSERT_ERROR(40009, "添加经理时出错，请检查did/wid是否正确"),
-
-
-
+    MANAGER_UPDATE_ERROR(40010, "更新经理时出错，请检查did/wid是否正确"),
+    MANAGER_DELETE_ERROR(40011, "删除经理时出错，请检查did/wid是否正确"),
+    MANAGER_SELECT_ERROR(40012, "查询经理时出错，请检查did/wid是否正确"),
     USER_INSERT_ERROR(40013, "添加用户时出错"),
     USER_UPDATE_ERROR(40014, "更新用户信息时出错，请检查uid是否正确"),
     USER_DELETE_ERROR(40015, "删除用户时出错，请检查uid是否正确"),
@@ -26,7 +26,11 @@ public enum  ErrorInfoEnum {
     PRODUCT_INSERT_ERROR(40017, "添加商品时出错，请检查uid和保修时间是否正确"),
     PRODUCT_UPDATE_ERROR(40018, "更新商品信息时出错，请检查pid和保修时间是否正确"),
     PRODUCT_DELETE_ERROR(40019, "删除商品时出错，请检查pid是否正确"),
-    PRODUCT_SELECT_ERROR(40020, "查询商品时出错，请检查pid是否正确");
+    PRODUCT_SELECT_ERROR(40020, "查询商品时出错，请检查pid是否正确"),
+    SHEET_INSERT_ERROR(40021, "添加报修记录时出错，请检查wid和pid是否正确"),
+    SHEET_UPDATE_ERROR(40022, "更新商品信息时出错，请检查wid和pid是否正确"),
+    SHEET_DELETE_ERROR(40023, "删除商品时出错，请检查sid/wid/pid/uid是否正确"),
+    SHEET_SELECT_ERROR(40024, "查询商品时出错，请检查sid/wid/pid/uid是否正确");
 
     private final Integer errCode;
     private final String errMsg;
