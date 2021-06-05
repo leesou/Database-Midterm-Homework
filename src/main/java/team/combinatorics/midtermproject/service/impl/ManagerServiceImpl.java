@@ -79,9 +79,10 @@ public class ManagerServiceImpl implements ManagerService {
         if(manageDTO.getDid()==1 || manageDTO.getManagerWid()==1)
             throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
 
-        // 检查是不是已经为经理了
-        if(manageDao.selectByWid(manageDTO.getManagerWid())!=null)
+        // 检查是不是已经为经理了，或者部门已有经理了
+        if(manageDao.selectByWid(manageDTO.getManagerWid())!=null || manageDao.selectByDid(manageDTO.getDid())==null)
             throw new KnownException(ErrorInfoEnum.MANAGER_INSERT_ERROR);
+
 
         ManagePO managePO = ManagePO.builder().
                                 did(manageDTO.getDid()).
