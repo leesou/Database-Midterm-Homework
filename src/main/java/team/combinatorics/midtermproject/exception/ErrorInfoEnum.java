@@ -30,7 +30,9 @@ public enum  ErrorInfoEnum {
     SHEET_INSERT_ERROR(40021, "添加报修记录时出错，请检查wid和pid是否正确"),
     SHEET_UPDATE_ERROR(40022, "更新商品信息时出错，请检查wid和pid是否正确"),
     SHEET_DELETE_ERROR(40023, "删除商品时出错，请检查sid/wid/pid/uid是否正确"),
-    SHEET_SELECT_ERROR(40024, "查询商品时出错，请检查sid/wid/pid/uid是否正确");
+    SHEET_SELECT_ERROR(40024, "查询商品时出错，请检查sid/wid/pid/uid是否正确"),
+    WORKER_SHEET_ERROR(40025, "删除员工/经理时出错，仍有未交接的维修单"),
+    SHEET_WID_ERROR(40026, "输入的员工id不存在");
 
     private final Integer errCode;
     private final String errMsg;

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import team.combinatorics.midtermproject.model.dto.AllServiceDTO;
 import team.combinatorics.midtermproject.model.dto.CommonResult;
 import team.combinatorics.midtermproject.model.dto.ServiceDTO;
+import team.combinatorics.midtermproject.model.po.IdGroup;
 import team.combinatorics.midtermproject.service.SheetService;
 
 import javax.validation.constraints.NotNull;
@@ -35,6 +36,17 @@ public class SheetController {
     ) {
         sheetService.updateSheet(serviceDTO);
         return new CommonResult<>(200, "更新成功", "This sheet has been changed.");
+    }
+
+    /**
+     * 替换sheet的wid
+     */
+    @RequestMapping(value = "/sheet/worker", method = RequestMethod.PUT)
+    public CommonResult<String> updateSheetWid(
+            @RequestBody @NotNull(message = "id不能为空")IdGroup idGroup
+    ) {
+        sheetService.updateSheetWid(idGroup);
+        return new CommonResult<>(200, "更新成功", "Sheets have been changed.");
     }
 
     /**

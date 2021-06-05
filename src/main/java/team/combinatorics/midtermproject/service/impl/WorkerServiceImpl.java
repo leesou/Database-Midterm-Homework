@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.combinatorics.midtermproject.dao.EmployDao;
 import team.combinatorics.midtermproject.dao.ManageDao;
+import team.combinatorics.midtermproject.dao.ServiceDao;
 import team.combinatorics.midtermproject.dao.WorkerDao;
 import team.combinatorics.midtermproject.exception.ErrorInfoEnum;
 import team.combinatorics.midtermproject.exception.KnownException;
@@ -24,6 +25,7 @@ public class WorkerServiceImpl implements WorkerService {
     private final WorkerDao workerDao;
     private final ManageDao manageDao;
     private final EmployDao employDao;
+    private final ServiceDao serviceDao;
 
     // 普通员工的添加
     // 同时也要修改employ表的信息。这个在sql内用触发器实现了
@@ -102,6 +104,10 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public void deleteWorker(Integer wid) {
         System.out.println("[删除员工]待删除员工的id为："+wid);
+
+        if(serviceDao.countByWid(wid)>0)
+            throw new KnownException(ErrorInfoEnum.WORKER_SHEET_ERROR);
+
         int num = workerDao.deleteByPrimaryKey(wid);
         if(num<1)
             throw new KnownException(ErrorInfoEnum.WORKER_DELETE_ERROR);

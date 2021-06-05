@@ -112,4 +112,10 @@
     drop view serD_temp;
   </select>
 
+  <update id="updateWid" parameterType="team.combinatorics.midtermproject.model.po.IdGroup">
+    update after_sale_service
+    set wid = #{newId}
+    where wid = #{oldId}
+  </update>
+
 </mapper>

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.combinatorics.midtermproject.dao.EmployDao;
 import team.combinatorics.midtermproject.dao.ManageDao;
+import team.combinatorics.midtermproject.dao.ServiceDao;
 import team.combinatorics.midtermproject.dao.WorkerDao;
 import team.combinatorics.midtermproject.exception.ErrorInfoEnum;
 import team.combinatorics.midtermproject.exception.KnownException;
@@ -24,6 +25,7 @@ public class ManagerServiceImpl implements ManagerService {
     private final WorkerDao workerDao;
     private final ManageDao manageDao;
     private final EmployDao employDao;
+    private final ServiceDao serviceDao;
 
     // 直接加入一个员工信息+manager
     // 同时修改employ
@@ -153,6 +155,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public void deleteManager(Integer wid) {
         System.out.println("[删除经理]经理的员工id："+wid);
+
+        if(serviceDao.countByWid(wid)>0)
+            throw new KnownException(ErrorInfoEnum.WORKER_SHEET_ERROR);
 
         int numManage = manageDao.deleteManagerByWid(wid);
         if(numManage<1)

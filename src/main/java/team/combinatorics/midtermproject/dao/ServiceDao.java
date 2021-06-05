@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import team.combinatorics.midtermproject.model.po.IdGroup;
 import team.combinatorics.midtermproject.model.po.ServicePO;
 import team.combinatorics.midtermproject.model.po.UserPO;
 
@@ -12,6 +13,8 @@ public interface ServiceDao {
     int insert(@Param("service") ServicePO record);
 
     int update(@Param("service") ServicePO record);
+
+    int updateWid(IdGroup idGroup);
 
     int deleteByPrimaryKey(Integer sid);
 

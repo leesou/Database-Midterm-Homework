@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.combinatorics.midtermproject.dao.ServiceDao;
+import team.combinatorics.midtermproject.dao.WorkerDao;
 import team.combinatorics.midtermproject.exception.ErrorInfoEnum;
 import team.combinatorics.midtermproject.exception.KnownException;
 import team.combinatorics.midtermproject.model.dto.AllServiceDTO;
 import team.combinatorics.midtermproject.model.dto.ServiceDTO;
+import team.combinatorics.midtermproject.model.po.IdGroup;
 import team.combinatorics.midtermproject.model.po.ServicePO;
 import team.combinatorics.midtermproject.service.SheetService;
 
@@ -18,6 +20,7 @@ import java.util.Vector;
 @AllArgsConstructor
 public class SheetServiceImpl implements SheetService {
     private final ServiceDao serviceDao;
+    private final WorkerDao workerDao;
 
     // 添加新保修单
     @Override
@@ -57,6 +60,19 @@ public class SheetServiceImpl implements SheetService {
         int num = serviceDao.update(servicePO);
         if(num<1)
             throw new KnownException(ErrorInfoEnum.SHEET_UPDATE_ERROR);
+    }
+
+    @Override
+    @Transactional
+    public void updateSheetWid(IdGroup idGroup) {
+        System.out.println("[维修单交接]旧的员工id："+idGroup.getOldId()+"，新的员工id："+idGroup.getNewId());
+
+        // 检查worker是否存在
+        if(workerDao.selectByPrimaryKey(idGroup.getOldId())==null || workerDao.selectByPrimaryKey(idGroup.getNewId())==null)
+            throw new KnownException(ErrorInfoEnum.SHEET_WID_ERROR);
+
+        int num = serviceDao.updateWid(idGroup);
+        System.out.println("[维修单交接]交接数量："+num);
     }
 
     // 删除保修单
@@ -192,5 +208,7 @@ public class SheetServiceImpl implements SheetService {
                 allServiceNum(allServiceNum).
                 build();
     }
+
+
 
 }
