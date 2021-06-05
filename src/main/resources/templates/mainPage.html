@@ -490,8 +490,13 @@
                     url: "/worker/",
                     data: {wid: id},
                     success: function(data) {
+                        console.log(data);
+                        if(data.code!==200) {
+                            alert(data.data);
+                            return;
+                        }
+                        alert(data.message);
                         let worker = data.data;
-                        console.log(data.data);
                         show_form(worker, "manager");
                     }
                 });
@@ -507,7 +512,7 @@
                     return;
                 }
                 if(isNaN(dto.did) || isNaN(dto.managerWid)){
-                    alert("did和工资必须为数字");
+                    alert("did和wid必须为数字");
                     return;
                 }
                 console.log(dto);
@@ -518,6 +523,10 @@
                     data:JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.data);
                     }
                 });
             })
@@ -535,10 +544,10 @@
                 if(!check_json(dto)){
                     return;
                 }
-                if(isNaN(dto.did) || isNaN(dto.salary)){
-                    alert("did和工资必须为数字");
-                    return;
-                }
+                if(isNaN(dto.salary))
+                    dto.salary = null;
+                if(isNaN(dto.did))
+                    dto.did = null;
                 console.log(dto);
                 $.ajax({
                     type: "POST",
@@ -547,6 +556,10 @@
                     data:JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert("经理的员工id为: "+data.data);
+                        else
+                            alert(data.data);
                     }
                 });
             })
@@ -562,6 +575,10 @@
                     data: {wid: id},
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.data);
                     }
                 });
             })
@@ -592,9 +609,14 @@
             });
             $("#manager_btn6").click(function (){
                 $.get("/manager/all", function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.data);
+                        return;
+                    }
+                    alert(data.message);
                     $("#manager_sal").text(""+data.data.allWorkerAvgSalary)
                     $("#manager_num").text(""+data.data.allWorkerNum)
-                    console.log(data.data);
                     let managers = data.data.allWorker;
                     let html = '<table id="manager_temp">';
                     html += "<tr>" + "<td>WID</td>" + "<td>姓名</td>" + "<td>工资</td>" +
