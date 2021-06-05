@@ -409,7 +409,8 @@
                     }
                     alert(data.message);
                     let dep = data.data;
-                    show_form(dep, "dep");
+                    $("#dep1").text(dep.departmentName);
+                    $("#dep2").text(dep.manager.workerName);
                 });
             });
             $("#dep_btn2").click(function (){ //删除
@@ -489,11 +490,13 @@
                         return;
                     }
                     alert(data.message);
-                    let deps = data.data;
+                    let deps = data.data.allDepartment;
                     let html = '<table id="dep_temp">';
                     html += "<tr>" + "<td>DID</td>" + "<td>部门名称</td>" + "<td>经理姓名</td>" + "</tr>";
                     for(let i=0;i<deps.length;i++){
-                        html+=gen_form(deps[i], 3);
+                        html+= "<tr>" + "<td>" + deps[i].did + "</td>"
+                            + "<td>" + deps[i].departmentName + "</td>"
+                            + "<td>" + deps[i].manager.workerName + "</td>" + "</tr>";
                     }
                     html+="</table>";
                     $("#dep_temp").html(html);
@@ -842,8 +845,13 @@
                     url: "/sheet/",
                     data: {sid: id},
                     success: function(data) {
+                        console.log(data);
+                        if(data.code!==200) {
+                            alert(data.code+": "+data.data);
+                            return;
+                        }
+                        alert(data.message);
                         let sheet = data.data;
-                        console.log(data.data);
                         show_form(sheet, "sheet");
                     }
                 });
@@ -860,6 +868,10 @@
                     data: {sid: id},
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -890,6 +902,10 @@
                     data:JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -927,13 +943,22 @@
                     data: JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
             $("#sheet_btn5").click(function (){
                 $.get("/sheet/all", function(data) {
                     $("#sheet_num").text(data.data.allServiceNum)
-                    console.log(data.data);
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.code+": "+data.data);
+                        return;
+                    }
+                    alert(data.message);
                     let sheets = data.data.allService;
                     let html = '<table id="sheet_temp">';
                     html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
@@ -951,8 +976,13 @@
                     alert("UID必须为数字！"); return;
                 }
                 $.get("/sheet/user", {uid: id}, function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.code+": "+data.data);
+                        return;
+                    }
+                    alert(data.message);
                     $("#sheet_num").text(data.data.allServiceNum)
-                    console.log(data.data);
                     let sheets = data.data.allService;
                     let html = '<table id="sheet_temp">';
                     html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
@@ -970,8 +1000,13 @@
                     alert("WID必须为数字！"); return;
                 }
                 $.get("/sheet/worker", {wid: id}, function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.code+": "+data.data);
+                        return;
+                    }
+                    alert(data.message);
                     $("#sheet_num").text(data.data.allServiceNum)
-                    console.log(data.data);
                     let sheets = data.data.allService;
                     let html = '<table id="sheet_temp">';
                     html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
@@ -989,8 +1024,13 @@
                     alert("DID必须为数字！"); return;
                 }
                 $.get("/sheet/department", {did: id}, function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.code+": "+data.data);
+                        return;
+                    }
+                    alert(data.message);
                     $("#sheet_num").text(data.data.allServiceNum)
-                    console.log(data.data);
                     let sheets = data.data.allService;
                     let html = '<table id="sheet_temp">';
                     html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
