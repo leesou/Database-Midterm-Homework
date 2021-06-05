@@ -88,13 +88,16 @@ DROP TABLE IF EXISTS `manage`;
 CREATE TABLE `manage`
 (
     `did`               INT UNSIGNED               NOT NULL COMMENT '部门id',
-    `manager_wid`               INT UNSIGNED               NOT NULL COMMENT '部门经理的员工id',
+    `manager_wid`       INT UNSIGNED   UNIQUE      NOT NULL COMMENT '部门经理的员工id',
     PRIMARY KEY pk_did(`did`),
     FOREIGN KEY fk_did(`did`) REFERENCES `department`(`did`),
     FOREIGN KEY fk_wid(`manager_wid`) REFERENCES `worker`(`wid`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET =utf8mb4
   COLLATE = utf8mb4_general_ci;
+
+-- 按员工姓名建立worker表的索引
+create index worker_name_index on worker(worker_name);
 
 -- 添加worker的同时也要添加employ，用触发器实现
 -- 即使添加的是一个manager，因为是先insert worker，再insert manage，所以不会出问题

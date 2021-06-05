@@ -17,7 +17,7 @@
 
   <insert id="insertEmployByManager" parameterType="team.combinatorics.midtermproject.model.po.ManagePO">
     insert into employ (employee_wid, employer_wid)
-    select worker1.wid, worker2.wid from worker as worker1, worker as worker2
+    select worker2.wid, worker1.wid from worker as worker1, worker as worker2
     where worker1.wid = #{manager.managerWid} and worker2.did = #{manager.did} and worker2.wid != #{manager.managerWid}
   </insert>
 

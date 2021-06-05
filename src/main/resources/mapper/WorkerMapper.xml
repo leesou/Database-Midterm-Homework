@@ -63,21 +63,17 @@
   </select>
 
   <select id="selectByDid" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
-      create index name_index on worker(worker_name);
       select wid, worker_name, salary, did, phone_number, email
       from worker
       where did = #{did}
       order by (worker_name);
-      alter table worker drop index name_index;
   </select>
 
   <select id="selectByManager" parameterType="java.lang.Integer" resultMap="WorkerResultMap">
-      create index name_index on worker(worker_name);
       select wid, worker_name, salary, did, phone_number, email
       from worker
       where wid in (select employee_wid from employ where employer_wid = #{wid})
-      order by (worker_name, wid);
-      alter table worker drop index name_index;
+      order by (worker_name);
   </select>
 
   <select id="countByDid" parameterType="java.lang.Integer" resultType="java.lang.Integer">

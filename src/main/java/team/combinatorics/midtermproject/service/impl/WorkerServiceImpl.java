@@ -46,12 +46,17 @@ public class WorkerServiceImpl implements WorkerService {
         return workerPO.getWid();
     }
 
-    // 普通员工的更新
+    // 普通员工的更新，要检查员工不是经理
     // 如果修改了did，也要同时更新employ信息，用事务实现，因为要判断manager的情况
     @Override
     @Transactional
     public void updateWorker(WorkerDTO workerDTO) {
         System.out.println("[修改员工信息]：员工id："+workerDTO.getWid());
+
+        // 检查员工不是经理
+        ManagePO managePO0 = manageDao.selectByDid(workerDTO.getDid());
+        if(managePO0!=null && managePO0.getManagerWid().equals(workerDTO.getWid()))
+            throw new KnownException(ErrorInfoEnum.WORKER_UPDATE_ERROR);
 
         // 更新worker表
         if(workerDTO.getWid()==null)

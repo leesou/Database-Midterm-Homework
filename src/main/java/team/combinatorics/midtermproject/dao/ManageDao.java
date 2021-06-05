@@ -19,6 +19,8 @@ public interface ManageDao {
 
     ManagePO selectByDid(Integer did);
 
+    ManagePO selectByWid(Integer managerWid);
+
     List<ManagePO> selectAll();
 
     Integer countAll();

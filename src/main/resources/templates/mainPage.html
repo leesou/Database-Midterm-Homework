@@ -190,7 +190,8 @@
                 dto.salary = parseFloat(dto.salary);
                 dto.did = parseInt(dto.did);
                 dto.wid = id;
-                check_json(dto);
+                if(check_json(dto)==false)
+                    return;
                 if(isNaN(dto.salary))
                     dto.salary = null;
                 if(isNaN(dto.did))
@@ -584,18 +585,32 @@
             })
             $("#manager_btn5").click(function(){ //修改manager信息
                 let dto = {
+                    "wid": null,
+                    "workerName": null,
+                    "salary": null,
                     "did": null,
-                    "managerWid": null,
+                    "phoneNumber": null,
+                    "email": null,
                 };
-                dto.did = parseInt($("#manager_DID").val());
-                dto.managerWid = parseInt($("#manager_WID").val());
+                dto.wid = $("#manager_WID").val();
+                dto.workerName = $("#manager1").text();
+                dto.salary = $("#manager2").text();
+                dto.did = $("#manager3").text();
+                dto.phoneNumber = $("#manager4").text();
+                dto.email = $("#manager5").text();
+                dto.salary = parseFloat(dto.salary);
+                dto.did = parseInt(dto.did);
                 if(!check_json(dto)){
                     return;
                 }
-                if(isNaN(dto.did) || isNaN(dto.managerWid)){
-                    alert("did和工资必须为数字");
+                if(dto.wid==="" || isNaN(dto.wid)){
+                    alert("WID必须为数字！");
                     return;
                 }
+                if(isNaN(dto.salary))
+                    dto.salary = null;
+                if(isNaN(dto.did))
+                    dto.did = null;
                 console.log(dto);
                 $.ajax({
                     type: "PUT",
@@ -604,6 +619,10 @@
                     data:JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.data);
                     }
                 });
             });

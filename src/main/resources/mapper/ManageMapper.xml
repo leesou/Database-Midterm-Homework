@@ -40,6 +40,12 @@
     where did = #{did,jdbcType=INTEGER}
   </select>
 
+  <select id="selectByWid" parameterType="java.lang.Integer" resultMap="ManageResultMap">
+    select did, manager_wid
+    from manage
+    where manager_wid = #{managerWid,jdbcType=INTEGER}
+  </select>
+
   <select id="selectAll" resultMap="ManageResultMap">
     select did, manager_wid
     from manage
