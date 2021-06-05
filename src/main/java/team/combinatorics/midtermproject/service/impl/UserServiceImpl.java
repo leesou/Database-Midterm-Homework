@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
             throw new KnownException(ErrorInfoEnum.USER_UPDATE_ERROR);
 
         UserPO userPO = UserPO.builder().
+                uid(userDTO.getUid()).
                 userName(userDTO.getUserName()).
                 address(userDTO.getAddress()).
                 phoneNumber(userDTO.getPhoneNumber()).

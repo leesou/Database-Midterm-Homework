@@ -111,7 +111,7 @@
                     success: function(data) {
                         console.log(data);
                         if(data.code!==200) {
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                             return;
                         }
                         alert(data.message);
@@ -135,7 +135,7 @@
                         if(data.code===200)
                             alert(data.message);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -169,7 +169,7 @@
                         if(data.code===200)
                             alert("添加成功，员工的wid为: "+data.data);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -208,7 +208,7 @@
                         if(data.code===200)
                             alert(data.message);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -221,7 +221,7 @@
                 $.get("/worker/manager", {wid: id}, function(data) {
                     console.log(data);
                     if(data.code!==200) {
-                        alert(data.data);
+                        alert(data.code+": "+data.data);
                         return;
                     }
                     alert(data.message);
@@ -235,7 +235,7 @@
                 $.get("/worker/all", function(data) {
                     console.log(data);
                     if(data.code!==200) {
-                        alert(data.data);
+                        alert(data.code+": "+data.data);
                         return;
                     }
                     alert(data.message);
@@ -261,7 +261,7 @@
                 $.get("/department/worker", {did: id}, function(data) {
                     console.log(data);
                     if(data.code!==200) {
-                        alert(data.data);
+                        alert(data.code+": "+data.data);
                         return;
                     }
                     alert(data.message);
@@ -290,8 +290,13 @@
                     url: "/user/",
                     data: {uid: id},
                     success: function(data) {
+                        console.log(data);
+                        if(data.code!==200) {
+                            alert(data.code+": "+data.data);
+                            return;
+                        }
+                        alert(data.message);
                         let user = data.data;
-                        console.log(data.data);
                         show_form(user, "user");
                     }
                 });
@@ -308,6 +313,10 @@
                     data: {uid: id},
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -330,6 +339,10 @@
                     data:JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert("添加成功，用户id为: "+data.data);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -356,12 +369,19 @@
                     data: JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert("修改成功");
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
             $("#user_btn5").click(function (){ //查找全部
                 $.get("/user/all", function(data) {
-                    console.log(data.data);
+                    console.log(data);
+                    if(data.code!==200)
+                        alert(data.code+": "+data.data);
+                    alert(data.message)
                     let users = data.data;
                     let html = '<table id="user_temp">';
                     html += "<tr>" + "<td>UID</td>" + "<td>姓名</td>" + "<td>地址</td>" +
@@ -384,7 +404,7 @@
                 $.get("/department/", {did: id}, function(data) {
                     console.log(data);
                     if(data.code!==200) {
-                        alert(data.data);
+                        alert(data.code+": "+data.data);
                         return;
                     }
                     alert(data.message);
@@ -407,7 +427,7 @@
                         if(data.code===200)
                             alert(data.message);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -429,7 +449,7 @@
                         if(data.code===200)
                             alert("新增部门的did为: "+data.data);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                         console.log(data);
                     }
                 });
@@ -457,7 +477,7 @@
                         if(data.code===200)
                             alert(data.message);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -465,7 +485,7 @@
                 $.get("/department/all", function(data) {
                     console.log(data);
                     if(data.code!==200) {
-                        alert(data.message);
+                        alert(data.code+": "+data.data);
                         return;
                     }
                     alert(data.message);
@@ -493,7 +513,7 @@
                     success: function(data) {
                         console.log(data);
                         if(data.code!==200) {
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                             return;
                         }
                         alert(data.message);
@@ -527,7 +547,7 @@
                         if(data.code===200)
                             alert(data.message);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -560,7 +580,7 @@
                         if(data.code===200)
                             alert("经理的员工id为: "+data.data);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -579,7 +599,7 @@
                         if(data.code===200)
                             alert(data.message);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -622,7 +642,7 @@
                         if(data.code===200)
                             alert(data.message);
                         else
-                            alert(data.data);
+                            alert(data.code+": "+data.data);
                     }
                 });
             });
@@ -630,7 +650,7 @@
                 $.get("/manager/all", function(data) {
                     console.log(data);
                     if(data.code!==200) {
-                        alert(data.data);
+                        alert(data.code+": "+data.data);
                         return;
                     }
                     alert(data.message);
