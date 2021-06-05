@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.combinatorics.midtermproject.dao.ProductDao;
 import team.combinatorics.midtermproject.dao.ServiceDao;
+import team.combinatorics.midtermproject.dao.UserDao;
 import team.combinatorics.midtermproject.exception.ErrorInfoEnum;
 import team.combinatorics.midtermproject.exception.KnownException;
 import team.combinatorics.midtermproject.model.dto.AllProductDTO;
@@ -21,6 +22,7 @@ import java.util.Vector;
 public class ProductServiceImpl implements ProductService {
     ProductDao productDao;
     ServiceDao serviceDao;
+    UserDao userDao;
 
     // 添加商品
     @Override
@@ -44,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
     public void updateProduct(ProductDTO productDTO) {
         System.out.println("[更新商品信息]商品id："+productDTO.getPid());
         ProductPO productPO = ProductPO.builder().
+                pid(productDTO.getPid()).
                 productName(productDTO.getProductName()).
                 price(productDTO.getPrice()).
                 sellTime(productDTO.getSellTime()).
@@ -115,8 +118,13 @@ public class ProductServiceImpl implements ProductService {
 
     // 获取单个用户的所有商品，总金额
     @Override
+    @Transactional
     public AllProductDTO getProductByUid(Integer uid) {
         System.out.println("[获取单个用户的购买情况]用户id："+uid);
+        // 检查用户是否存在
+        if(userDao.selectByPrimaryKey(uid)==null)
+            throw new KnownException(ErrorInfoEnum.PRODUCT_SELECT_ERROR);
+
         List<ProductPO> productPOList = productDao.selectByUid(uid);
         List<ProductDTO> productDTOList = new Vector<>();
         for(ProductPO productPO:productPOList) {

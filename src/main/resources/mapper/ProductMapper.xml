@@ -58,6 +58,7 @@
     select pid, product_name, price, sell_time, duration, uid
     from product
     where uid = #{uid,jdbcType=INTEGER}
+    order by (sell_time)
   </select>
 
   <select id="countByUid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
@@ -67,11 +68,9 @@
   </select>
 
   <select id="selectAll" resultMap="ProductResultMap">
-    create index price_index on product(price);
     select pid, product_name, price, sell_time, duration, uid
     from product
-    order by (uid, price);
-    alter table product drop index price_index;
+    order by (uid);
   </select>
 
   <select id="sumMoneyByUid" parameterType="java.lang.Integer" resultType="java.lang.Double">

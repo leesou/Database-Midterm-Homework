@@ -99,6 +99,9 @@ CREATE TABLE `manage`
 -- 按员工姓名建立worker表的索引
 create index worker_name_index on worker(worker_name);
 
+-- 按商品售出日期建立product表的索引
+create index product_date_index on product(sell_time);
+
 -- 添加worker的同时也要添加employ，用触发器实现
 -- 即使添加的是一个manager，因为是先insert worker，再insert manage，所以不会出问题
 CREATE TRIGGER `worker_insert_trigger` AFTER INSERT

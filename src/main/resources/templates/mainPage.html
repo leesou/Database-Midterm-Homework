@@ -679,8 +679,13 @@
                     url: "/product/",
                     data: {pid: id},
                     success: function(data) {
+                        console.log(data);
+                        if(data.code!==200) {
+                            alert(data.code+": "+data.data);
+                            return;
+                        }
+                        alert(data.message);
                         let product = data.data;
-                        console.log(data.data);
                         show_form(product, "product");
                     }
                 });
@@ -697,6 +702,10 @@
                     data: {pid: id},
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -717,7 +726,7 @@
                     alert("uid必须为数字");
                     return;
                 }
-                alert($.type({ProductDTO: dto}));
+                // alert($.type({ProductDTO: dto}));
                 console.log(dto);
                 $.ajax({
                     type: "POST",
@@ -726,7 +735,10 @@
                     data:JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
-
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
@@ -757,7 +769,7 @@
                 if(isNaN(dto.uid) || isNaN(dto.pid)){
                     return;
                 }
-                alert($.type({ProductDTO: dto}));
+                // alert($.type({ProductDTO: dto}));
                 console.log(dto);
                 $.ajax({
                     type: "PUT",
@@ -766,12 +778,21 @@
                     data: JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
                     }
                 });
             })
             $("#product_btn5").click(function (){
                 $.get("/product/all", function(data) {
-                    console.log(data.data);
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.code+": "+data.data);
+                        return;
+                    }
+                    alert(data.message);
                     let products = data.data;
                     let html = '<table id="product_temp">';
                     html += "<tr>" + "<td>PID</td>" + "<td>产品名</td>" + "<td>价格</td>" +
@@ -789,9 +810,15 @@
                     alert("UID必须为数字！"); return;
                 }
                 $.get("/product/user", {uid: id}, function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.code+": "+data.data);
+                        return;
+                    }
+                    alert(data.message);
                     $("#product_money").text(""+data.data.allProductMoney)
                     $("#product_num").text(""+data.data.allProductNum)
-                    console.log(data.data);
+
                     let products = data.data.allProduct;
                     let html = '<table id="product_temp">';
                     html += "<tr>" + "<td>PID</td>" + "<td>产品名</td>" + "<td>价格</td>" +
