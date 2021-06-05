@@ -897,7 +897,7 @@
                     alert("wid和pid必须为数字");
                     return;
                 }
-                alert($.type({ServiceDTO: dto}));
+                // alert($.type({ServiceDTO: dto}));
                 console.log(dto);
                 $.ajax({
                     type: "POST",
@@ -938,7 +938,7 @@
                     return;
                 }
 
-                alert($.type({ServiceDTO: dto}));
+                // alert($.type({ServiceDTO: dto}));
                 console.log(dto);
                 $.ajax({
                     type: "PUT",
@@ -1049,11 +1049,11 @@
             $("#sheet_btn9").click(function (){
                 let old_wid = parseInt($("#old_WID").val());
                 let new_wid = parseInt($("#new_WID").val());
-                let ldgroup = {
+                let idGroup = {
                     "oldID": old_wid,
                     "newID": new_wid
                 };
-                check_json(ldgroup);
+                check_json(idGroup);
                 if(isNaN(old_wid) || isNaN(new_wid)){
                     alert("id必须为数字"); return;
                 }
@@ -1061,7 +1061,7 @@
                     type: "PUT",
                     contentType : 'application/json',
                     url:"/sheet/worker",
-                    data: JSON.stringify(ldgroup),
+                    data: JSON.stringify(idGroup),
                     success: function (data){
                         console.log(data);
                         if(data.code===200)

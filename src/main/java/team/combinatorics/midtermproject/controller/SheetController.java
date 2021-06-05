@@ -41,7 +41,7 @@ public class SheetController {
     /**
      * 替换sheet的wid
      */
-    @RequestMapping(value = "/sheet/worker", method = RequestMethod.PUT)
+    @RequestMapping(value = "/worker", method = RequestMethod.PUT)
     public CommonResult<String> updateSheetWid(
             @RequestBody @NotNull(message = "id不能为空")IdGroup idGroup
     ) {

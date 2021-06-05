@@ -75,6 +75,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         if(did==1)
             throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
 
+        int numService = serviceDao.updateWidByDid(did);
+        System.out.println("[删除部门]交接的维修单数："+numService);
+
         int numEmploy = employDao.deleteByDid(did);
         System.out.println("[删除部门]删除雇佣记录条数："+numEmploy);
 
@@ -83,9 +86,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         int numWorker = workerDao.deleteByDid(did);
         System.out.println("[删除部门]删除员工（含经理）人数："+numWorker);
-
-        int numService = serviceDao.updateWidByDid(did);
-        System.out.println("[删除部门]交接的维修单格数："+numService);
 
         int num = departmentDao.deleteByPrimaryKey(did);
         if(num<1)

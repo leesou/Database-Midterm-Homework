@@ -51,6 +51,7 @@ public class SheetServiceImpl implements SheetService {
             throw new KnownException(ErrorInfoEnum.SHEET_UPDATE_ERROR);
 
         ServicePO servicePO = ServicePO.builder().
+                sid(serviceDTO.getSid()).
                 serviceType(serviceDTO.getServiceType()).
                 description(serviceDTO.getDescription()).
                 state(serviceDTO.getState()).
