@@ -1050,8 +1050,8 @@
                 let old_wid = parseInt($("#old_WID").val());
                 let new_wid = parseInt($("#new_WID").val());
                 let idGroup = {
-                    "oldID": old_wid,
-                    "newID": new_wid
+                    "oldId": old_wid,
+                    "newId": new_wid
                 };
                 check_json(idGroup);
                 if(isNaN(old_wid) || isNaN(new_wid)){
@@ -1064,6 +1064,7 @@
                     data: JSON.stringify(idGroup),
                     success: function (data){
                         console.log(data);
+                        console.log(JSON.stringify(idGroup));
                         if(data.code===200)
                             alert(data.message);
                         else
