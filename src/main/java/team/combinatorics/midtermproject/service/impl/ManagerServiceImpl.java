@@ -33,13 +33,15 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public Integer addNewManager(WorkerDTO workerDTO) {
         System.out.println("[添加新经理]经理姓名："+workerDTO.getWorkerName()+"，经理部门id："+workerDTO.getDid());
-        // 检查部门十是否已有经理了
+        // 检查部门是否已有经理了
         if(manageDao.selectByDid(workerDTO.getDid())!=null)
             throw new KnownException(ErrorInfoEnum.MANAGER_INSERT_ERROR);
 
         // 先在worker表内加入一个新worker
         if(workerDTO.getDid()==null)
             throw new KnownException(ErrorInfoEnum.MANAGER_INSERT_ERROR);
+        if(workerDTO.getDid()==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
         WorkerPO workerPO = WorkerPO.builder().
                 workerName(workerDTO.getWorkerName()).
                 salary(workerDTO.getSalary()).

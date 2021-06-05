@@ -410,7 +410,8 @@
                     alert(data.message);
                     let dep = data.data;
                     $("#dep1").text(dep.departmentName);
-                    $("#dep2").text(dep.manager.workerName);
+                    if(dep.manager!==null)
+                        $("#dep2").text(dep.manager.workerName);
                 });
             });
             $("#dep_btn2").click(function (){ //删除
@@ -495,8 +496,11 @@
                     html += "<tr>" + "<td>DID</td>" + "<td>部门名称</td>" + "<td>经理姓名</td>" + "</tr>";
                     for(let i=0;i<deps.length;i++){
                         html+= "<tr>" + "<td>" + deps[i].did + "</td>"
-                            + "<td>" + deps[i].departmentName + "</td>"
-                            + "<td>" + deps[i].manager.workerName + "</td>" + "</tr>";
+                            + "<td>" + deps[i].departmentName + "</td>";
+                        if(deps[i].manager!==null)
+                            html += "<td>" + deps[i].manager.workerName + "</td>" + "</tr>";
+                        else
+                            html += "<td>" + "" + "</td>" + "</tr>";
                     }
                     html+="</table>";
                     $("#dep_temp").html(html);

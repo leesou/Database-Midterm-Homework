@@ -35,6 +35,9 @@ public class WorkerServiceImpl implements WorkerService {
         System.out.println("[添加员工]员工姓名："+workerDTO.getWorkerName()+"，员工部门id："+workerDTO.getDid());
         if(workerDTO.getDid()==null)
             throw new KnownException(ErrorInfoEnum.WORKER_INSERT_ERROR);
+        if(workerDTO.getDid()==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         WorkerPO workerPO = WorkerPO.builder().
                                 workerName(workerDTO.getWorkerName()).
                                 salary(workerDTO.getSalary()).
