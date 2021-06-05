@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        tr{
+            border: 1px solid black;
+        }
+        td{
+            border: 1px solid black;
+        }
+        .fold{
+            font-size: 24px;
+            font-weight: bold;
+            padding: 0;
+            margin: 0;
+            width: 600px;
+            text-align: center;
+            border: 4px solid skyblue;
+            background-color: lightblue;
+        }
+        li div{
+            display: none;
+        }
+    </style>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script>
+        //辅助功能类
+        function empty(param){
+            // 检查参数是否全为空格或者为空
+            if(typeof(param)=='string'){
+                if(param.match(/^[ ]*$/)){
+                    return true;
+                }
+            }
+            else{
+                if(param===""){
+                    return true;
+                }
+            }
+            return false;
+        }
+        function check_json(json){
+            // 检查一个json中的所有属性是否全不为空
+            console.log(json)
+            for(let key in json){
+                if(empty(json[key])){
+                    alert("信息不能留空");
+                    return false;
+                }
+            }
+            return true;
+        }
+        function get_data(json, form_name){
+            let i = 1;
+            for(let key in json){
+                let str = "#" + form_name + i;
+                json[key] = $(str).text();
+                i++;
+            }
+            return json;
+        }
+        function gen_form(json, form_len){
+            if(Object.keys(json).length !== form_len){
+                alert("json数据与表格长度不符"); return;
+            }
+            let html="";
+            html+="<tr>";
+            for(let key in json){
+                html+="<td>"+json[key]+"</td>";
+            }
+            html+="</tr>";
+            return html;
+        }
+        function show_form(json, form_name){
+            let i = 0;
+            for(let key in json){
+                if(i===0){
+                    i++; continue;
+                }
+                let str = "#" + form_name + i;
+                $(str).text(json[key]);
+                i++;
+            }
+            return json;
+        }
+        //触发类
+        $(document).ready(function(){
+            $("ul li p.fold").click(function (){
+                $(this).next().toggle(250);
+            })
+            $(".show").hover(function () {
+                $(this).css("background-color", "lightgray").css("cursor", "pointer")
+            }, function () {
+                $(this).css("background-color", "white").css("cursor", "auto")
+            }).click(function (){
+                $(this).next().toggle(250)
+            })
+
+            //worker
+            $("#worker_btn1").click(function(){
+                let id = $("#WID").val();
+                if(id==="" || isNaN(id)){
+                    alert("WID必须为数字！");
+                    return;
+                }
+                $.get({
+                    url: "/worker/",
+                    data: {wid: id},
+                    success: function(data) {
+                        let worker = data.data;
+                        console.log(data.data);
+                        show_form(worker, "worker");
+                    }
+                });
+            });
+            $("#worker_btn2").click(function (){
+                let id = $("#WID").val();
+                if(id==="" || isNaN(id)){
+                    alert("WID必须为数字！");
+                    return;
+                }
+                $.ajax({
+                    type: "DELETE",
+                    url:"/worker/",
+                    data: {wid: id},
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#worker_btn3").click(function (){
+                let dto = {
+                    "workerName": null,
+                    "salary": null,
+                    "did": null,
+                    "phoneNumber": null,
+                    "email": null
+                };
+                dto = get_data(dto, "worker");
+                dto.salary = parseFloat(dto.salary);
+                dto.did = parseInt(dto.did);
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.did) || isNaN(dto.salary)){
+                    alert("did和工资必须为数字");
+                    return;
+                }
+                alert($.type({WorkerDTO: dto}));
+                console.log(dto);
+                $.ajax({
+                    type: "POST",
+                    contentType : 'application/json',//添加这句话
+                    url:"/worker/", //提交的地址
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+
+                    }
+                });
+            })
+            $("#worker_btn4").click(function (){
+                let id = $("#WID").val();
+                if(id==="" || isNaN(id)){
+                    alert("WID必须为数字！");
+                    return;
+                }
+                let dto = {
+                    "workerName": null,
+                    "salary": null,
+                    "did": null,
+                    "phoneNumber": null,
+                    "email": null
+                };
+                dto = get_data(dto, "worker");
+                dto.salary = parseFloat(dto.salary);
+                dto.did = parseInt(dto.did);
+                dto.wid = id;
+                check_json(dto);
+                if(isNaN(dto.did) || isNaN(dto.salary)){
+                    return;
+                }
+                alert($.type({WorkerDTO: dto}));
+                console.log(dto);
+                $.ajax({
+                    type: "PUT",
+                    contentType : 'application/json',
+                    url:"/worker/",
+                    data: JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#worker_btn5").click(function(){
+                let id = $("#WID").val();
+                if(id==="" || isNaN(id)){
+                    alert("WID必须为数字！");
+                    return;
+                }
+                $.get("/worker/manager", {wid: id}, function(data) {
+                    let worker = data.data;
+                    console.log(data.data);
+                    show_form(worker, "worker");
+                });
+            });
+            $("#worker_btn6").click(function (){
+                $.get("/worker/all", function(data) {
+                    $("#avg_sal").text(""+data.data.allWorkerAvgSalary)
+                    $("#worker_num").text(""+data.data.allWorkerNum)
+                    console.log(data.data);
+                    let workers = data.data.allWorker;
+                    let html = '<table id="worker_temp">';
+                    html += "<tr>" + "<td>WID</td>" + "<td>姓名</td>" + "<td>工资</td>" +
+                            "<td>部门ID</td>" + "<td>手机号码</td>" + "<td>邮箱</td>"+ "</tr>";
+                    for(let i=0;i<workers.length;i++){
+                        html+=gen_form(workers[i], 6);
+                    }
+                    html+="</table>";
+                    $("#worker_temp").html(html);
+                });
+            })
+            $("#worker_btn7").click(function (){
+                let id = $("#worker_DID").val();
+                if(id==="" || isNaN(id)){
+                    alert("DID必须为数字！"); return;
+                }
+                $.get("/department/worker", {did: id}, function(data) {
+                    $("#avg_sal").text(""+data.data.allWorkerAvgSalary)
+                    $("#worker_num").text(""+data.data.allWorkerNum)
+                    console.log(data.data);
+                    let workers = data.data.allWorker;
+                    let html = '<table id="worker_temp">';
+                    html += "<tr>" + "<td>WID</td>" + "<td>姓名</td>" + "<td>工资</td>" +
+                        "<td>部门ID</td>" + "<td>手机号码</td>" + "<td>邮箱</td>"+ "</tr>";
+                    for(let i=0;i<workers.length;i++){
+                        html+=gen_form(workers[i], 6);
+                    }
+                    html+="</table>";
+                    $("#worker_temp").html(html);
+                });
+            })
+
+            //user
+            $("#user_btn1").click(function(){ //查找
+                let id = $("#UID").val();
+                if(id==="" || isNaN(id)){
+                    alert("UID必须为数字！");
+                    return;
+                }
+                $.get({
+                    url: "/user/",
+                    data: {uid: id},
+                    success: function(data) {
+                        let user = data.data;
+                        console.log(data.data);
+                        show_form(user, "user");
+                    }
+                });
+            });
+            $("#user_btn2").click(function (){ //删除
+                let id = $("#UID").val();
+                if(id==="" || isNaN(id)){
+                    alert("UID必须为数字！");
+                    return;
+                }
+                $.ajax({
+                    type: "DELETE",
+                    url:"/user/",
+                    data: {uid: id},
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#user_btn3").click(function (){ //增加
+                let dto = {
+                    "userName": null,
+                    "address": null,
+                    "phoneNumber": null,
+                    "email": null
+                };
+                dto = get_data(dto, "user");
+                if(!check_json(dto)){
+                    return;
+                }
+                console.log(dto);
+                $.ajax({
+                    type: "POST",
+                    contentType : 'application/json',
+                    url:"/user/", //提交的地址
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#user_btn4").click(function (){ //修改
+                let id = $("#UID").val();
+                if(id==="" || isNaN(id)){
+                    alert("UID必须为数字！");
+                    return;
+                }
+                let dto = {
+                    "userName": null,
+                    "address": null,
+                    "phoneNumber": null,
+                    "email": null
+                };
+                dto = get_data(dto, "user");
+                dto.uid = parseInt(id);
+                check_json(dto);
+                console.log(dto);
+                $.ajax({
+                    type: "PUT",
+                    contentType : 'application/json',
+                    url:"/user/",
+                    data: JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#user_btn5").click(function (){ //查找全部
+                $.get("/user/all", function(data) {
+                    console.log(data.data);
+                    let users = data.data;
+                    let html = '<table id="user_temp">';
+                    html += "<tr>" + "<td>UID</td>" + "<td>姓名</td>" + "<td>地址</td>" +
+                        "<td>手机号码</td>" + "<td>邮箱</td>"+ "</tr>";
+                    for(let i=0;i<users.length;i++){
+                        html+=gen_form(users[i], 5);
+                    }
+                    html+="</table>";
+                    $("#user_temp").html(html);
+                });
+            })
+
+            //部门
+            $("#dep_btn1").click(function(){ //查找
+                let id = $("#DID").val();
+                if(id==="" || isNaN(id)){
+                    alert("DID必须为数字！");
+                    return;
+                }
+                $.get("/department/", {did: id}, function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.data);
+                        return;
+                    }
+                    alert(data.message);
+                    let dep = data.data;
+                    show_form(dep, "dep");
+                });
+            });
+            $("#dep_btn2").click(function (){ //删除
+                let id = $("#DID").val();
+                if(id==="" || isNaN(id)){
+                    alert("DID必须为数字！");
+                    return;
+                }
+                $.ajax({
+                    type: "DELETE",
+                    url:"/department/",
+                    data: {did: id},
+                    success: function (data){
+                        console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.data);
+                    }
+                });
+            })
+            $("#dep_btn3").click(function (){ //增加
+                let dto = {
+                    "departmentName": null,
+                };
+                dto.departmentName = $("#dep1").text();
+                if(!check_json(dto)){
+                    return;
+                }
+                console.log(dto);
+                $.ajax({
+                    type: "POST",
+                    contentType : 'application/json',
+                    url:"/department/",
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        if(data.code===200)
+                            alert("新增部门的did为: "+data.data);
+                        else
+                            alert(data.data);
+                        console.log(data);
+                    }
+                });
+            })
+            $("#dep_btn4").click(function (){ //修改
+                let id = $("#DID").val();
+                if(id==="" || isNaN(id)){
+                    alert("DID必须为数字！");
+                    return;
+                }
+                let dto = {
+                    "departmentName": null,
+                };
+                dto.departmentName = $("#dep1").text();
+                dto.did = parseInt(id);
+                check_json(dto);
+                console.log(dto);
+                $.ajax({
+                    type: "PUT",
+                    contentType : 'application/json',
+                    url:"/department/",
+                    data: JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.data);
+                    }
+                });
+            })
+            $("#dep_btn5").click(function (){ //查找全部
+                $.get("/department/all", function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.message);
+                        return;
+                    }
+                    alert(data.message);
+                    let deps = data.data;
+                    let html = '<table id="dep_temp">';
+                    html += "<tr>" + "<td>DID</td>" + "<td>部门名称</td>" + "<td>经理姓名</td>" + "</tr>";
+                    for(let i=0;i<deps.length;i++){
+                        html+=gen_form(deps[i], 3);
+                    }
+                    html+="</table>";
+                    $("#dep_temp").html(html);
+                });
+            })
+
+            //manager
+            $("#manager_btn1").click(function(){ //根据wid查找worker，和worker那个一样
+                let id = $("#manager_WID").val();
+                if(id==="" || isNaN(id)){
+                    alert("WID必须为数字！");
+                    return;
+                }
+                $.get({
+                    url: "/worker/",
+                    data: {wid: id},
+                    success: function(data) {
+                        let worker = data.data;
+                        console.log(data.data);
+                        show_form(worker, "manager");
+                    }
+                });
+            });
+            $("#manager_btn2").click(function (){ //普通员工升职为manager
+                let dto = {
+                    "did": null,
+                    "managerWid": null,
+                };
+                dto.did = parseInt($("#manager_DID").val());
+                dto.managerWid = parseInt($("#manager_WID").val());
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.did) || isNaN(dto.managerWid)){
+                    alert("did和工资必须为数字");
+                    return;
+                }
+                console.log(dto);
+                $.ajax({
+                    type: "POST",
+                    contentType : 'application/json',
+                    url:"/manager/",
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#manager_btn3").click(function (){ //添加manager
+                let dto = {
+                    "workerName": null,
+                    "salary": null,
+                    "did": null,
+                    "phoneNumber": null,
+                    "email": null
+                };
+                dto = get_data(dto, "manager");
+                dto.salary = parseFloat(dto.salary);
+                dto.did = parseInt(dto.did);
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.did) || isNaN(dto.salary)){
+                    alert("did和工资必须为数字");
+                    return;
+                }
+                console.log(dto);
+                $.ajax({
+                    type: "POST",
+                    contentType : 'application/json',
+                    url:"/manager/new",
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#manager_btn4").click(function (){ //删除
+                let id = $("#manager_WID").val();
+                if(id==="" || isNaN(id)){
+                    alert("WID必须为数字！");
+                    return;
+                }
+                $.ajax({
+                    type: "DELETE",
+                    url:"/manager/",
+                    data: {wid: id},
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#manager_btn5").click(function(){ //修改manager信息
+                let dto = {
+                    "did": null,
+                    "managerWid": null,
+                };
+                dto.did = parseInt($("#manager_DID").val());
+                dto.managerWid = parseInt($("#manager_WID").val());
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.did) || isNaN(dto.managerWid)){
+                    alert("did和工资必须为数字");
+                    return;
+                }
+                console.log(dto);
+                $.ajax({
+                    type: "PUT",
+                    contentType : 'application/json',
+                    url:"/manager/",
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            });
+            $("#manager_btn6").click(function (){
+                $.get("/manager/all", function(data) {
+                    $("#manager_sal").text(""+data.data.allWorkerAvgSalary)
+                    $("#manager_num").text(""+data.data.allWorkerNum)
+                    console.log(data.data);
+                    let managers = data.data.allWorker;
+                    let html = '<table id="manager_temp">';
+                    html += "<tr>" + "<td>WID</td>" + "<td>姓名</td>" + "<td>工资</td>" +
+                        "<td>部门ID</td>" + "<td>手机号码</td>" + "<td>邮箱</td>"+ "</tr>";
+                    for(let i=0;i<managers.length;i++){
+                        html+=gen_form(managers[i], 6);
+                    }
+                    html+="</table>";
+                    $("#manager_temp").html(html);
+                });
+            })
+
+            //product
+            $("#product_btn1").click(function(){ //查询
+                let id = $("#PID").val();
+                if(id==="" || isNaN(id)){
+                    alert("PID必须为数字！");
+                    return;
+                }
+                $.get({
+                    url: "/product/",
+                    data: {pid: id},
+                    success: function(data) {
+                        let product = data.data;
+                        console.log(data.data);
+                        show_form(product, "product");
+                    }
+                });
+            });
+            $("#product_btn2").click(function (){ //删除
+                let id = $("#PID").val();
+                if(id==="" || isNaN(id)){
+                    alert("PID必须为数字！");
+                    return;
+                }
+                $.ajax({
+                    type: "DELETE",
+                    url:"/product/",
+                    data: {pid: id},
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#product_btn3").click(function (){ //添加
+                let dto = {
+                    "productName": null,
+                    "price": null,
+                    "sellTime": null,
+                    "duration": null,
+                    "uid": null
+                };
+                dto = get_data(dto, "product");
+                dto.uid = parseInt(dto.uid);
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.uid)){
+                    alert("uid必须为数字");
+                    return;
+                }
+                alert($.type({ProductDTO: dto}));
+                console.log(dto);
+                $.ajax({
+                    type: "POST",
+                    contentType : 'application/json',
+                    url:"/product/",
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+
+                    }
+                });
+            })
+            $("#product_btn4").click(function (){ //修改
+                let id = $("#PID").val();
+                if(id==="" || isNaN(id)){
+                    alert("PID必须为数字！");
+                    return;
+                }
+                let dto = {
+                    "productName": null,
+                    "price": null,
+                    "sellTime": null,
+                    "duration": null,
+                    "uid": null
+                };
+                dto = get_data(dto, "product");
+                dto.uid = parseInt(dto.uid);
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.uid)){
+                    alert("uid必须为数字");
+                    return;
+                }
+                dto.pid = id;
+                check_json(dto);
+                if(isNaN(dto.uid) || isNaN(dto.pid)){
+                    return;
+                }
+                alert($.type({ProductDTO: dto}));
+                console.log(dto);
+                $.ajax({
+                    type: "PUT",
+                    contentType : 'application/json',
+                    url:"/product/",
+                    data: JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#product_btn5").click(function (){
+                $.get("/product/all", function(data) {
+                    console.log(data.data);
+                    let products = data.data;
+                    let html = '<table id="product_temp">';
+                    html += "<tr>" + "<td>PID</td>" + "<td>产品名</td>" + "<td>价格</td>" +
+                        "<td>售出时间</td>" + "<td>保修期</td>" + "<td>用户ID</td>"+ "</tr>";
+                    for(let i=0;i<products.length;i++){
+                        html+=gen_form(products[i], 6);
+                    }
+                    html+="</table>";
+                    $("#product_temp").html(html);
+                });
+            })
+            $("#product_btn6").click(function (){
+                let id = $("#product_UID").val();
+                if(id==="" || isNaN(id)){
+                    alert("UID必须为数字！"); return;
+                }
+                $.get("/product/user", {uid: id}, function(data) {
+                    $("#product_money").text(""+data.data.allProductMoney)
+                    $("#product_num").text(""+data.data.allProductNum)
+                    console.log(data.data);
+                    let products = data.data.allProduct;
+                    let html = '<table id="product_temp">';
+                    html += "<tr>" + "<td>PID</td>" + "<td>产品名</td>" + "<td>价格</td>" +
+                        "<td>售出时间</td>" + "<td>保修期</td>" + "<td>用户ID</td>"+ "</tr>";
+                    for(let i=0;i<products.length;i++){
+                        html+=gen_form(products[i], 6);
+                    }
+                    html+="</table>";
+                    $("#product_temp").html(html);
+                });
+            })
+
+            //sheet
+            $("#sheet_btn1").click(function(){ //查询
+                let id = $("#SID").val();
+                if(id==="" || isNaN(id)){
+                    alert("SID必须为数字！");
+                    return;
+                }
+                $.get({
+                    url: "/sheet/",
+                    data: {sid: id},
+                    success: function(data) {
+                        let sheet = data.data;
+                        console.log(data.data);
+                        show_form(sheet, "sheet");
+                    }
+                });
+            });
+            $("#sheet_btn2").click(function (){ //删除
+                let id = $("#SID").val();
+                if(id==="" || isNaN(id)){
+                    alert("SID必须为数字！");
+                    return;
+                }
+                $.ajax({
+                    type: "DELETE",
+                    url:"/sheet/",
+                    data: {sid: id},
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#sheet_btn3").click(function (){ //添加
+                let dto = {
+                    "serviceType": null,
+                    "description": null,
+                    "state": null,
+                    "wid": null,
+                    "pid": null
+                };
+                dto = get_data(dto, "sheet");
+                dto.wid = parseInt(dto.wid);
+                dto.pid = parseInt(dto.pid);
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.wid) || isNaN(dto.pid)){
+                    alert("wid和pid必须为数字");
+                    return;
+                }
+                alert($.type({ServiceDTO: dto}));
+                console.log(dto);
+                $.ajax({
+                    type: "POST",
+                    contentType : 'application/json',
+                    url:"/sheet/",
+                    data:JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#sheet_btn4").click(function (){ //修改
+                let id = $("#SID").val();
+                if(id==="" || isNaN(id)){
+                    alert("SID必须为数字！");
+                    return;
+                }
+                let dto = {
+                    "serviceType": null,
+                    "description": null,
+                    "state": null,
+                    "wid": null,
+                    "pid": null
+                };
+                dto = get_data(dto, "sheet");
+                dto.wid = parseInt(dto.wid);
+                dto.pid = parseInt(dto.pid);
+                dto.sid = id;
+                if(!check_json(dto)){
+                    return;
+                }
+                if(isNaN(dto.wid) || isNaN(dto.pid) || isNaN(dto.sid)){
+                    alert("wid和pid和sid必须为数字");
+                    return;
+                }
+
+                alert($.type({ServiceDTO: dto}));
+                console.log(dto);
+                $.ajax({
+                    type: "PUT",
+                    contentType : 'application/json',
+                    url:"/sheet/",
+                    data: JSON.stringify(dto),
+                    success: function (data){
+                        console.log(data);
+                    }
+                });
+            })
+            $("#sheet_btn5").click(function (){
+                $.get("/sheet/all", function(data) {
+                    $("#sheet_num").text(data.data.allServiceNum)
+                    console.log(data.data);
+                    let sheets = data.data.allService;
+                    let html = '<table id="sheet_temp">';
+                    html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
+                        "<td>状态</td>" + "<td>员工ID</td>" + "<td>订单ID</td>"+ "</tr>";
+                    for(let i=0;i<sheets.length;i++){
+                        html+=gen_form(sheets[i], 6);
+                    }
+                    html+="</table>";
+                    $("#sheet_temp").html(html);
+                });
+            })
+            $("#sheet_btn6").click(function (){
+                let id = $("#sheet_UID").val();
+                if(id==="" || isNaN(id)){
+                    alert("UID必须为数字！"); return;
+                }
+                $.get("/sheet/user", {uid: id}, function(data) {
+                    $("#sheet_num").text(data.data.allServiceNum)
+                    console.log(data.data);
+                    let sheets = data.data.allService;
+                    let html = '<table id="sheet_temp">';
+                    html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
+                        "<td>状态</td>" + "<td>员工ID</td>" + "<td>订单ID</td>"+ "</tr>";
+                    for(let i=0;i<sheets.length;i++){
+                        html+=gen_form(sheets[i], 6);
+                    }
+                    html+="</table>";
+                    $("#sheet_temp").html(html);
+                });
+            })
+            $("#sheet_btn7").click(function (){
+                let id = $("#sheet_WID").val();
+                if(id==="" || isNaN(id)){
+                    alert("WID必须为数字！"); return;
+                }
+                $.get("/sheet/worker", {wid: id}, function(data) {
+                    $("#sheet_num").text(data.data.allServiceNum)
+                    console.log(data.data);
+                    let sheets = data.data.allService;
+                    let html = '<table id="sheet_temp">';
+                    html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
+                        "<td>状态</td>" + "<td>员工ID</td>" + "<td>订单ID</td>"+ "</tr>";
+                    for(let i=0;i<sheets.length;i++){
+                        html+=gen_form(sheets[i], 6);
+                    }
+                    html+="</table>";
+                    $("#sheet_temp").html(html);
+                });
+            })
+            $("#sheet_btn8").click(function (){
+                let id = $("#sheet_DID").val();
+                if(id==="" || isNaN(id)){
+                    alert("DID必须为数字！"); return;
+                }
+                $.get("/sheet/department", {did: id}, function(data) {
+                    $("#sheet_num").text(data.data.allServiceNum)
+                    console.log(data.data);
+                    let sheets = data.data.allService;
+                    let html = '<table id="sheet_temp">';
+                    html += "<tr>" + "<td>SID</td>" + "<td>类型</td>" + "<td>描述</td>" +
+                        "<td>状态</td>" + "<td>员工ID</td>" + "<td>订单ID</td>"+ "</tr>";
+                    for(let i=0;i<sheets.length;i++){
+                        html+=gen_form(sheets[i], 6);
+                    }
+                    html+="</table>";
+                    $("#sheet_temp").html(html);
+                });
+            })
+        });
+    </script>
+</head>
+<body>
+    <ul>
+        <li>
+            <p class = fold>员工</p>
+            <div>
+                <p>
+                    WID:
+                    <input type="text" id="WID">
+                </p>
+                <p>
+                <table>
+                    <tr>
+                        <td>姓名</td>
+                        <td>工资</td>
+                        <td>部门ID</td>
+                        <td>手机号码</td>
+                        <td>邮箱</td>
+                    </tr>
+                    <tr>
+                        <td id="worker1" contenteditable="true"></td>
+                        <td id="worker2" contenteditable="true"></td>
+                        <td id="worker3" contenteditable="true"></td>
+                        <td id="worker4" contenteditable="true"></td>
+                        <td id="worker5" contenteditable="true"></td>
+                    </tr>
+                </table>
+                <p>
+                    <button id="worker_btn1">查找</button>
+                    <button id="worker_btn2">删除</button>
+                    <button id="worker_btn3">插入</button>
+                    <button id="worker_btn4">修改</button>
+                    <button id="worker_btn5">查找经理</button>
+                </p>
+                <span class=show>所有员工</span>
+                <div style="display:none">
+                    平均工资:  <span id="avg_sal">0</span>
+                    总人数:  <span id="worker_num">0</span>
+                    <br>
+                    <button id="worker_btn6">所有查询</button>
+                    <button id="worker_btn7">按部门查询</button>
+                    部门ID: <input type="text" id="worker_DID">
+                    <table id="worker_temp" ></table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <p class = fold>用户</p>
+            <div>
+                <p>
+                    UID:
+                    <input type="text" id="UID">
+                </p>
+                <p>
+                <table>
+                    <tr>
+                        <td>姓名</td>
+                        <td>地址</td>
+                        <td>手机号码</td>
+                        <td>邮箱</td>
+                    </tr>
+                    <tr>
+                        <td id="user1" contenteditable="true"></td>
+                        <td id="user2" contenteditable="true"></td>
+                        <td id="user3" contenteditable="true"></td>
+                        <td id="user4" contenteditable="true"></td>
+                    </tr>
+                </table>
+                <p>
+                    <button id="user_btn1">查找</button>
+                    <button id="user_btn2">删除</button>
+                    <button id="user_btn3">插入</button>
+                    <button id="user_btn4">修改</button>
+                </p>
+                <span class=show>所有用户</span>
+                <div style="display:none">
+                    <button id="user_btn5">查询</button>
+                    <table id="user_temp" ></table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <p class = fold>部门</p>
+            <div>
+                <p>
+                    DID:
+                    <input type="text" id="DID">
+                </p>
+                <p>
+                <table>
+                    <tr>
+                        <td>部门名称</td>
+                        <td>经理姓名</td>
+                    </tr>
+                    <tr>
+                        <td id="dep1" contenteditable="true"></td>
+                        <td id="dep2" contenteditable="true"></td>
+                    </tr>
+                </table>
+                <p>
+                    <button id="dep_btn1">查找</button>
+                    <button id="dep_btn2">删除</button>
+                    <button id="dep_btn3">插入</button>
+                    <button id="dep_btn4">修改</button>
+                </p>
+                <span class=show>所有部门</span>
+                <div style="display:none">
+                    <button id="dep_btn5">查询</button>
+                    <table id="dep_temp" ></table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <p class = fold>经理</p>
+            <div>
+                <p>
+                    WID:
+                    <input type="text" id="manager_WID">
+                    DID:
+                    <input type="text" id="manager_DID">
+                </p>
+                <p>
+                <table>
+                    <tr>
+                        <td>姓名</td>
+                        <td>工资</td>
+                        <td>部门ID</td>
+                        <td>手机号码</td>
+                        <td>邮箱</td>
+                    </tr>
+                    <tr>
+                        <td id="manager1" contenteditable="true"></td>
+                        <td id="manager2" contenteditable="true"></td>
+                        <td id="manager3" contenteditable="true"></td>
+                        <td id="manager4" contenteditable="true"></td>
+                        <td id="manager5" contenteditable="true"></td>
+                    </tr>
+                </table>
+                <p>
+                    <button id="manager_btn1">查找员工</button>
+                    <button id="manager_btn2">升职</button>
+                    <button id="manager_btn3">添加</button>
+                    <button id="manager_btn4">删除</button>
+                    <button id="manager_btn5">修改</button>
+                </p>
+                <span class=show>所有经理</span>
+                <div style="display:none">
+                    平均工资:  <span id="manager_sal">0</span>
+                    总人数:  <span id="manager_num">0</span>
+                    <br>
+                    <button id="manager_btn6">查询</button>
+                    <table id="manager_temp" ></table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <p class = fold>购买记录</p>
+            <div>
+                <p>
+                    PID:
+                    <input type="text" id="PID">
+                </p>
+                <p>
+                <table>
+                    <tr>
+                        <td>产品名</td>
+                        <td>价格</td>
+                        <td>售出时间</td>
+                        <td>保修期</td>
+                        <td>UID</td>
+                    </tr>
+                    <tr>
+                        <td id="product1" contenteditable="true"></td>
+                        <td id="product2" contenteditable="true"></td>
+                        <td id="product3" contenteditable="true"></td>
+                        <td id="product4" contenteditable="true"></td>
+                        <td id="product5" contenteditable="true"></td>
+                    </tr>
+                </table>
+                <p>
+                    <button id="product_btn1">查找</button>
+                    <button id="product_btn2">删除</button>
+                    <button id="product_btn3">插入</button>
+                    <button id="product_btn4">修改</button>
+                </p>
+                <span class=show>所有记录</span>
+                <div style="display:none">
+                    用户购买总数:  <span id="product_num">0</span>
+                    用户购买金额:  <span id="product_money">0</span>
+                    <br>
+                    <button id="product_btn5">查询所有</button>
+                    <button id="product_btn6">按用户查询</button>
+                    <input type="text" id="product_UID">
+                    <table id="product_temp" ></table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <p class = fold>售后记录</p>
+            <div>
+                <p>
+                    SID:
+                    <input type="text" id="SID">
+                </p>
+                <p>
+                <table>
+                    <tr>
+                        <td>类型</td>
+                        <td>描述</td>
+                        <td>状态</td>
+                        <td>员工ID</td>
+                        <td>订单ID</td>
+                    </tr>
+                    <tr>
+                        <td id="sheet1" contenteditable="true"></td>
+                        <td id="sheet2" contenteditable="true"></td>
+                        <td id="sheet3" contenteditable="true"></td>
+                        <td id="sheet4" contenteditable="true"></td>
+                        <td id="sheet5" contenteditable="true"></td>
+                    </tr>
+                </table>
+                <p>
+                    <button id="sheet_btn1">查找</button>
+                    <button id="sheet_btn2">删除</button>
+                    <button id="sheet_btn3">插入</button>
+                    <button id="sheet_btn4">修改</button>
+                </p>
+                <span class=show>所有记录</span>
+                <div style="display:none">
+                    总服务单数:  <span id="sheet_num">0</span>
+                    <br>
+                    <button id="sheet_btn5">查询所有</button>
+                    <button id="sheet_btn6">按用户查询</button>
+                    <input type="text" id="sheet_UID">
+                    <button id="sheet_btn7">按员工查询</button>
+                    <input type="text" id="sheet_WID">
+                    <button id="sheet_btn8">按部门查询</button>
+                    <input type="text" id="sheet_DID">
+                    <table id="sheet_temp" ></table>
+                </div>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>
