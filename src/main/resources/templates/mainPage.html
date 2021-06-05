@@ -109,8 +109,13 @@
                     url: "/worker/",
                     data: {wid: id},
                     success: function(data) {
+                        console.log(data);
+                        if(data.code!==200) {
+                            alert(data.data);
+                            return;
+                        }
+                        alert(data.message);
                         let worker = data.data;
-                        console.log(data.data);
                         show_form(worker, "worker");
                     }
                 });
@@ -127,6 +132,10 @@
                     data: {wid: id},
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.data);
                     }
                 });
             })
@@ -148,7 +157,7 @@
                     alert("did和工资必须为数字");
                     return;
                 }
-                alert($.type({WorkerDTO: dto}));
+                // alert($.type({WorkerDTO: dto}));
                 console.log(dto);
                 $.ajax({
                     type: "POST",
@@ -157,7 +166,10 @@
                     data:JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
-
+                        if(data.code===200)
+                            alert("添加成功，员工的wid为: "+data.data);
+                        else
+                            alert(data.data);
                     }
                 });
             })
@@ -179,10 +191,11 @@
                 dto.did = parseInt(dto.did);
                 dto.wid = id;
                 check_json(dto);
-                if(isNaN(dto.did) || isNaN(dto.salary)){
-                    return;
-                }
-                alert($.type({WorkerDTO: dto}));
+                if(isNaN(dto.salary))
+                    dto.salary = null;
+                if(isNaN(dto.did))
+                    dto.did = null;
+                // alert($.type({WorkerDTO: dto}));
                 console.log(dto);
                 $.ajax({
                     type: "PUT",
@@ -191,6 +204,10 @@
                     data: JSON.stringify(dto),
                     success: function (data){
                         console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.data);
                     }
                 });
             })
@@ -201,16 +218,29 @@
                     return;
                 }
                 $.get("/worker/manager", {wid: id}, function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.data);
+                        return;
+                    }
+                    alert(data.message);
                     let worker = data.data;
-                    console.log(data.data);
+                    if(data.data==null)
+                        alert("该员工目前无经理管理");
                     show_form(worker, "worker");
                 });
             });
             $("#worker_btn6").click(function (){
                 $.get("/worker/all", function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.data);
+                        return;
+                    }
+                    alert(data.message);
                     $("#avg_sal").text(""+data.data.allWorkerAvgSalary)
                     $("#worker_num").text(""+data.data.allWorkerNum)
-                    console.log(data.data);
+
                     let workers = data.data.allWorker;
                     let html = '<table id="worker_temp">';
                     html += "<tr>" + "<td>WID</td>" + "<td>姓名</td>" + "<td>工资</td>" +
@@ -228,9 +258,14 @@
                     alert("DID必须为数字！"); return;
                 }
                 $.get("/department/worker", {did: id}, function(data) {
+                    console.log(data);
+                    if(data.code!==200) {
+                        alert(data.data);
+                        return;
+                    }
+                    alert(data.message);
                     $("#avg_sal").text(""+data.data.allWorkerAvgSalary)
                     $("#worker_num").text(""+data.data.allWorkerNum)
-                    console.log(data.data);
                     let workers = data.data.allWorker;
                     let html = '<table id="worker_temp">';
                     html += "<tr>" + "<td>WID</td>" + "<td>姓名</td>" + "<td>工资</td>" +

@@ -73,9 +73,9 @@ public class SheetController {
      */
     @RequestMapping(value = "/worker", method = RequestMethod.GET)
     public CommonResult<AllServiceDTO> getWorkerSheet(
-            @RequestParam @NotNull(message = "员工id不能为空")Integer uid
+            @RequestParam @NotNull(message = "员工id不能为空")Integer wid
     ) {
-        return new CommonResult<>(200, "查询成功", sheetService.getServiceByUid(uid));
+        return new CommonResult<>(200, "查询成功", sheetService.getServiceByWid(wid));
     }
 
     /**

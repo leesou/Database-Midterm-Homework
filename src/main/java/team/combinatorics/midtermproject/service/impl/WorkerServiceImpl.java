@@ -72,7 +72,7 @@ public class WorkerServiceImpl implements WorkerService {
         if(workerPO.getDid()!=null) {
             ManagePO managePO = manageDao.selectByDid(workerPO.getDid());
             // 如果新部门有经理，修改表项，没有经理则删除表项
-            if(managePO.getManagerWid()!=null) {
+            if(managePO!=null) {
                 EmployPO employPO = EmployPO.builder().
                                         employeeWid(workerPO.getWid()).
                                         employerWid(managePO.getManagerWid()).
@@ -123,6 +123,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     // 获取员工对应经理的信息
     @Override
+    @Transactional
     public WorkerDTO getWorkerManagerByWid(Integer wid) {
         System.out.println("[查询员工经理]员工id："+wid.toString());
 
@@ -149,6 +150,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     // 获取所有员工的信息，以及员工总人数，平均薪水
     @Override
+    @Transactional
     public AllWorkerDTO getAllWorker() {
         System.out.println("[获取所有员工的信息]");
         List<WorkerPO> workerPOList = workerDao.selectAll();

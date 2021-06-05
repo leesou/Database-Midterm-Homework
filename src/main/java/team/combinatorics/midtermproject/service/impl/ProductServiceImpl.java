@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
                 duration(productDTO.getDuration()).
                 uid(productDTO.getUid()).
                 build();
-        int num = productDao.insert(productPO);
+        int num = productDao.update(productPO);
         if(num<1)
             throw new KnownException(ErrorInfoEnum.PRODUCT_UPDATE_ERROR);
     }
