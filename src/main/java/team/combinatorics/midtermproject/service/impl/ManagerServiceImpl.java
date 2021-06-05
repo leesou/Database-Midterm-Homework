@@ -73,6 +73,10 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public void changeWorkerToManager(ManageDTO manageDTO) {
         System.out.println("[提拔员工为经理]经理的员工id："+manageDTO.getManagerWid()+"，经理部门id："+manageDTO.getDid());
+
+        if(manageDTO.getDid()==1 || manageDTO.getManagerWid()==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         // 检查是不是已经为经理了
         if(manageDao.selectByWid(manageDTO.getManagerWid())!=null)
             throw new KnownException(ErrorInfoEnum.MANAGER_INSERT_ERROR);
@@ -100,6 +104,10 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public void updateManager(WorkerDTO workerDTO) {
         System.out.println("[更新经理信息]经理的员工id："+workerDTO.getWid());
+
+        if(workerDTO.getDid()==1 || workerDTO.getWid()==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         // 先确定这是一位经理
         ManagePO managePO = manageDao.selectByWid(workerDTO.getWid());
         if(managePO==null || !managePO.getManagerWid().equals(workerDTO.getWid()))
@@ -156,6 +164,10 @@ public class ManagerServiceImpl implements ManagerService {
     public void deleteManager(Integer wid) {
         System.out.println("[删除经理]经理的员工id："+wid);
 
+        if(wid==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
+        // 检查是否有未交接的维修单
         if(serviceDao.countByWid(wid)>0)
             throw new KnownException(ErrorInfoEnum.WORKER_SHEET_ERROR);
 
@@ -177,6 +189,10 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public WorkerDTO getManagerByDid(Integer did) {
         System.out.println("[查询单个部门的经理信息]部门id："+did);
+
+        if(did==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         // 检查是否存在经理
         ManagePO managePO = manageDao.selectByDid(did);
         if(managePO==null)
@@ -231,6 +247,13 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public AllWorkerDTO getWorkerByManager(Integer wid) {
         System.out.println("[查询单个经理管理的员工信息]经理的员工id："+wid);
+
+        if(wid==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
+        if(manageDao.selectByWid(wid)==null)
+            throw new KnownException(ErrorInfoEnum.WORKER_SELECT_ERROR);
+
         List<WorkerPO> workerPOList = workerDao.selectByManager(wid);
         List<WorkerDTO> workerDTOList = new Vector<>();
         for(WorkerPO workerPO:workerPOList) {

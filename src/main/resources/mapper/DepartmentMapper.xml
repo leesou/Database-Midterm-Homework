@@ -40,7 +40,10 @@
 
   <select id="selectAll" resultMap="DepartmentResultMap">
     select did, department_name
-    from department order by did
+    from department
+    where did != 1
+    order by did
+
   </select>
 
   <select id="countAll" resultType="java.lang.Integer">

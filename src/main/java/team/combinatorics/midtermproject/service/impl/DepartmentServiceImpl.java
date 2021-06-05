@@ -3,10 +3,7 @@ package team.combinatorics.midtermproject.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.combinatorics.midtermproject.dao.DepartmentDao;
-import team.combinatorics.midtermproject.dao.EmployDao;
-import team.combinatorics.midtermproject.dao.ManageDao;
-import team.combinatorics.midtermproject.dao.WorkerDao;
+import team.combinatorics.midtermproject.dao.*;
 import team.combinatorics.midtermproject.exception.ErrorInfoEnum;
 import team.combinatorics.midtermproject.exception.KnownException;
 import team.combinatorics.midtermproject.model.dto.AllDepartmentDTO;
@@ -28,6 +25,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final EmployDao employDao;
     private final ManageDao manageDao;
     private final WorkerDao workerDao;
+    private final ServiceDao serviceDao;
 
     // 返回did给前端
     @Override
@@ -46,6 +44,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void updateDepartment(DepartmentDTO departmentDTO) {
         System.out.println("[更新部门]部门id："+departmentDTO.getDid().toString()+"，新的部门名称："+departmentDTO.getDepartmentName());
+        if(departmentDTO.getDid()==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         if(departmentDTO.getDid()==null)
             throw new KnownException(ErrorInfoEnum.DEPARTMENT_UPDATE_ERR);
         DepartmentPO departmentPO = DepartmentPO.builder().
@@ -64,11 +65,15 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     // 删除部门时，要先删除其下的员工和经理，以及对应的雇佣关系
+    // 此外，还要交接剩余的维修单
     // 使用事务保证一致性
     @Override
     @Transactional
     public void deleteDepartment(Integer did) {
         System.out.println("[删除部门]部门id："+did.toString());
+
+        if(did==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
 
         int numEmploy = employDao.deleteByDid(did);
         System.out.println("[删除部门]删除雇佣记录条数："+numEmploy);
@@ -78,6 +83,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         int numWorker = workerDao.deleteByDid(did);
         System.out.println("[删除部门]删除员工（含经理）人数："+numWorker);
+
+        int numService = serviceDao.updateWidByDid(did);
+        System.out.println("[删除部门]交接的维修单格数："+numService);
 
         int num = departmentDao.deleteByPrimaryKey(did);
         if(num<1)
@@ -130,6 +138,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional
     public DepartmentDTO getDepartmentInfoByDid(Integer did) {
         System.out.println("[获取部门信息]部门id："+did.toString());
+
+        if(did==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         DepartmentPO departmentPO = departmentDao.selectByPrimaryKey(did);
         if(departmentPO==null)
             throw new KnownException(ErrorInfoEnum.DEPARTMENT_SELECT_ERROR);
@@ -160,6 +172,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional
     public AllWorkerDTO getDepartmentWorkerByDid(Integer did) {
         System.out.println("[查询部门员工]部门id："+did.toString());
+
+        if(did==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         DepartmentPO departmentPO = departmentDao.selectByPrimaryKey(did);
         if(departmentPO==null)
             throw new KnownException(ErrorInfoEnum.DEPARTMENT_SELECT_ERROR);

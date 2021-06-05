@@ -96,6 +96,12 @@ CREATE TABLE `manage`
   DEFAULT CHARSET =utf8mb4
   COLLATE = utf8mb4_general_ci;
 
+-- 插入一个影子员工和影子部门，用于接管删除部门时未交接的维修单
+insert into department
+value(1, 'shade_dep');
+insert into worker
+value (1, 'shade_worker', 0, 1, '', '');
+
 -- 按员工姓名建立worker表的索引
 create index worker_name_index on worker(worker_name);
 

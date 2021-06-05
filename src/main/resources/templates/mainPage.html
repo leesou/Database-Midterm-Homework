@@ -1042,6 +1042,31 @@
                     $("#sheet_temp").html(html);
                 });
             })
+            $("#sheet_btn9").click(function (){
+                let old_wid = parseInt($("#old_WID").val());
+                let new_wid = parseInt($("#new_WID").val());
+                let ldgroup = {
+                    "oldID": old_wid,
+                    "newID": new_wid
+                };
+                check_json(ldgroup);
+                if(isNaN(old_wid) || isNaN(new_wid)){
+                    alert("id必须为数字"); return;
+                }
+                $.ajax({
+                    type: "PUT",
+                    contentType : 'application/json',
+                    url:"/sheet/worker",
+                    data: JSON.stringify(ldgroup),
+                    success: function (data){
+                        console.log(data);
+                        if(data.code===200)
+                            alert(data.message);
+                        else
+                            alert(data.code+": "+data.data);
+                    }
+                });
+            })
         });
     </script>
 </head>
@@ -1283,6 +1308,15 @@
                     <button id="sheet_btn8">按部门查询</button>
                     <input type="text" id="sheet_DID">
                     <table id="sheet_temp" ></table>
+                </div>
+                <br>
+                <span class=show>售后交接</span>
+                <div style="display: none">
+                    <button id="sheet_btn9">交接</button>
+                    老员工ID:
+                    <input type="text" id="old_WID">
+                    新员工ID:
+                    <input type="text" id="new_WID">
                 </div>
             </div>
         </li>

@@ -32,7 +32,8 @@ public enum  ErrorInfoEnum {
     SHEET_DELETE_ERROR(40023, "删除商品时出错，请检查sid/wid/pid/uid是否正确"),
     SHEET_SELECT_ERROR(40024, "查询商品时出错，请检查sid/wid/pid/uid是否正确"),
     WORKER_SHEET_ERROR(40025, "删除员工/经理时出错，仍有未交接的维修单"),
-    SHEET_WID_ERROR(40026, "输入的员工id不存在");
+    SHEET_WID_ERROR(40026, "输入的员工id不存在"),
+    CHANGE_SHADE_ERROR(40027, "did/wid不能等于1");
 
     private final Integer errCode;
     private final String errMsg;

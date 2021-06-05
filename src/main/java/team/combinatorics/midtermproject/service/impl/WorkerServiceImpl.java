@@ -55,6 +55,9 @@ public class WorkerServiceImpl implements WorkerService {
     public void updateWorker(WorkerDTO workerDTO) {
         System.out.println("[修改员工信息]：员工id："+workerDTO.getWid());
 
+        if(workerDTO.getWid()==1 || workerDTO.getDid()==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
         // 检查员工不是经理
         ManagePO managePO0 = manageDao.selectByDid(workerDTO.getDid());
         if(managePO0!=null && managePO0.getManagerWid().equals(workerDTO.getWid()))
@@ -102,9 +105,14 @@ public class WorkerServiceImpl implements WorkerService {
     // 普通员工的删除
     // 同时也要修改employ表的信息。这个在sql内用触发器实现了
     @Override
+    @Transactional
     public void deleteWorker(Integer wid) {
         System.out.println("[删除员工]待删除员工的id为："+wid);
 
+        if(wid==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
+
+        // 删除前检查是否有未交接的维修单
         if(serviceDao.countByWid(wid)>0)
             throw new KnownException(ErrorInfoEnum.WORKER_SHEET_ERROR);
 
@@ -117,6 +125,9 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public WorkerDTO getWorkerInfoByWid(Integer wid) {
         System.out.println("[查询员工信息]员工id："+wid.toString());
+
+        if(wid==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
 
         WorkerPO workerPO = workerDao.selectByPrimaryKey(wid);
         if(workerPO==null)
@@ -137,6 +148,9 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional
     public WorkerDTO getWorkerManagerByWid(Integer wid) {
         System.out.println("[查询员工经理]员工id："+wid.toString());
+
+        if(wid==1)
+            throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
 
         // 查询员工信息
         WorkerPO workerPO = workerDao.selectByPrimaryKey(wid);

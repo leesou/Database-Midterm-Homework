@@ -85,6 +85,7 @@
   <select id="selectAll" resultMap="WorkerResultMap">
     select wid, worker_name, salary, did, phone_number, email
     from worker
+    where wid != 1
     order by (did);
   </select>
 

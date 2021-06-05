@@ -118,4 +118,10 @@
     where wid = #{oldId}
   </update>
 
+  <update id="updateWidByDid" parameterType="java.lang.Integer">
+    update after_sale_service
+    set wid = 1
+    where wid in (select worker.wid from worker where worker.did = #{did})
+  </update>
+
 </mapper>

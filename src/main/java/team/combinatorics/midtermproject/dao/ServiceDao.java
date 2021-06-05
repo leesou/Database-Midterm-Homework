@@ -16,6 +16,8 @@ public interface ServiceDao {
 
     int updateWid(IdGroup idGroup);
 
+    int updateWidByDid(Integer did);
+
     int deleteByPrimaryKey(Integer sid);
 
     int deleteByUid(Integer uid);
