@@ -31,6 +31,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public Integer addNewManager(WorkerDTO workerDTO) {
         System.out.println("[添加新经理]经理姓名："+workerDTO.getWorkerName()+"，经理部门id："+workerDTO.getDid());
+        // 检查部门十是否已有经理了
+        if(manageDao.selectByDid(workerDTO.getDid())!=null)
+            throw new KnownException(ErrorInfoEnum.MANAGER_INSERT_ERROR);
 
         // 先在worker表内加入一个新worker
         if(workerDTO.getDid()==null)
@@ -68,6 +71,10 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public void changeWorkerToManager(ManageDTO manageDTO) {
         System.out.println("[提拔员工为经理]经理的员工id："+manageDTO.getManagerWid()+"，经理部门id："+manageDTO.getDid());
+        // 检查是不是已经为经理了
+        if(manageDao.selectByWid(manageDTO.getManagerWid())!=null)
+            throw new KnownException(ErrorInfoEnum.MANAGER_INSERT_ERROR);
+
         ManagePO managePO = ManagePO.builder().
                                 did(manageDTO.getDid()).
                                 managerWid(manageDTO.getManagerWid()).
@@ -92,7 +99,7 @@ public class ManagerServiceImpl implements ManagerService {
     public void updateManager(WorkerDTO workerDTO) {
         System.out.println("[更新经理信息]经理的员工id："+workerDTO.getWid());
         // 先确定这是一位经理
-        ManagePO managePO = manageDao.selectByDid(workerDTO.getDid());
+        ManagePO managePO = manageDao.selectByWid(workerDTO.getWid());
         if(managePO==null || !managePO.getManagerWid().equals(workerDTO.getWid()))
             throw new KnownException(ErrorInfoEnum.MANAGER_UPDATE_ERROR);
 
