@@ -39,8 +39,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         int num = departmentDao.insert(departmentPO);
         if(num<1 || departmentPO.getDid()==null)
             throw new KnownException(ErrorInfoEnum.DEPARTMENT_INSERT_ERR);
-        System.out.println("[添加部门]部门id："+departmentDTO.getDid());
-        return departmentDTO.getDid();
+        System.out.println("[添加部门]部门id："+departmentPO.getDid());
+        return departmentPO.getDid();
     }
 
     @Override
@@ -52,9 +52,15 @@ public class DepartmentServiceImpl implements DepartmentService {
                                         did(departmentDTO.getDid()).
                                         departmentName(departmentDTO.getDepartmentName()).
                                         build();
-        int num = departmentDao.update(departmentPO);
-        if(num<1)
+        try {
+            int num = departmentDao.update(departmentPO);
+            if(num<1)
+                throw new KnownException(ErrorInfoEnum.DEPARTMENT_UPDATE_ERR);
+        } catch (Exception e) {
             throw new KnownException(ErrorInfoEnum.DEPARTMENT_UPDATE_ERR);
+        }
+
+
     }
 
     // 删除部门时，要先删除其下的员工和经理，以及对应的雇佣关系
@@ -89,15 +95,18 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<DepartmentDTO> allDepartmentD = new Vector<>();
         for(DepartmentPO departmentPO:allDepartmentP) {
             ManagePO managePO = manageDao.selectByDid(departmentPO.getDid());
-            WorkerPO workerPO = workerDao.selectByPrimaryKey(managePO.getManagerWid());
-            WorkerDTO workerDTO = WorkerDTO.builder().
-                    wid(workerPO.getWid()).
-                    workerName(workerPO.getWorkerName()).
-                    salary(workerPO.getSalary()).
-                    did(workerPO.getDid()).
-                    phoneNumber(workerPO.getPhoneNumber()).
-                    email(workerPO.getEmail()).
-                    build();
+            WorkerDTO workerDTO = null;
+            if(managePO!=null) {
+                WorkerPO workerPO = workerDao.selectByPrimaryKey(managePO.getManagerWid());
+                workerDTO = WorkerDTO.builder().
+                        wid(workerPO.getWid()).
+                        workerName(workerPO.getWorkerName()).
+                        salary(workerPO.getSalary()).
+                        did(workerPO.getDid()).
+                        phoneNumber(workerPO.getPhoneNumber()).
+                        email(workerPO.getEmail()).
+                        build();
+            }
 
             DepartmentDTO departmentDTO = DepartmentDTO.builder().
                                                 did(departmentPO.getDid()).
@@ -126,15 +135,19 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new KnownException(ErrorInfoEnum.DEPARTMENT_SELECT_ERROR);
 
         ManagePO managePO = manageDao.selectByDid(departmentPO.getDid());
-        WorkerPO workerPO = workerDao.selectByPrimaryKey(managePO.getManagerWid());
-        WorkerDTO workerDTO = WorkerDTO.builder().
-                wid(workerPO.getWid()).
-                workerName(workerPO.getWorkerName()).
-                salary(workerPO.getSalary()).
-                did(workerPO.getDid()).
-                phoneNumber(workerPO.getPhoneNumber()).
-                email(workerPO.getEmail()).
-                build();
+        WorkerDTO workerDTO = null;
+        if(managePO!=null) {
+            WorkerPO workerPO = workerDao.selectByPrimaryKey(managePO.getManagerWid());
+            workerDTO = WorkerDTO.builder().
+                    wid(workerPO.getWid()).
+                    workerName(workerPO.getWorkerName()).
+                    salary(workerPO.getSalary()).
+                    did(workerPO.getDid()).
+                    phoneNumber(workerPO.getPhoneNumber()).
+                    email(workerPO.getEmail()).
+                    build();
+        }
+
         return DepartmentDTO.builder().
                 did(departmentPO.getDid()).
                 departmentName(departmentPO.getDepartmentName()).
@@ -153,16 +166,18 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         List<WorkerPO> workerPOs = workerDao.selectByDid(did);
         List<WorkerDTO> workerDTOs = new Vector<>();
-        for(WorkerPO workerPO:workerPOs) {
-            WorkerDTO workerDTO = WorkerDTO.builder().
-                    wid(workerPO.getWid()).
-                    workerName(workerPO.getWorkerName()).
-                    salary(workerPO.getSalary()).
-                    did(workerPO.getDid()).
-                    phoneNumber(workerPO.getPhoneNumber()).
-                    email(workerPO.getEmail()).
-                    build();
-            workerDTOs.add(workerDTO);
+        if(workerPOs!=null) {
+            for(WorkerPO workerPO:workerPOs) {
+                WorkerDTO workerDTO = WorkerDTO.builder().
+                        wid(workerPO.getWid()).
+                        workerName(workerPO.getWorkerName()).
+                        salary(workerPO.getSalary()).
+                        did(workerPO.getDid()).
+                        phoneNumber(workerPO.getPhoneNumber()).
+                        email(workerPO.getEmail()).
+                        build();
+                workerDTOs.add(workerDTO);
+            }
         }
 
         Integer workerNum = workerDao.countByDid(did);

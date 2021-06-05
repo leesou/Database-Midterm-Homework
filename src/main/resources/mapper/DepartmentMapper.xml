@@ -40,7 +40,7 @@
 
   <select id="selectAll" resultMap="DepartmentResultMap">
     select did, department_name
-    from department
+    from department order by did
   </select>
 
   <select id="countAll" resultType="java.lang.Integer">

@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department`
 (
     `did`               INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '自增长的部门id',
-    `department_name`   VARCHAR(100)                NOT NULL COMMENT '部门名称',
+    `department_name`   VARCHAR(100) UNIQUE         NOT NULL COMMENT '部门名称',
     PRIMARY KEY pk_did(`did`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET =utf8mb4
