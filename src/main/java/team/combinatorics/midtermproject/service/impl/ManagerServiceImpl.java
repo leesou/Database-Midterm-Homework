@@ -111,7 +111,7 @@ public class ManagerServiceImpl implements ManagerService {
         if(workerDTO.getDid()==1 || workerDTO.getWid()==1)
             throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
 
-        // 先确定这是一位经理
+        // 先确定这不是一位经理
         ManagePO managePO = manageDao.selectByWid(workerDTO.getWid());
         if(managePO==null || !managePO.getManagerWid().equals(workerDTO.getWid()))
             throw new KnownException(ErrorInfoEnum.MANAGER_UPDATE_ERROR);
