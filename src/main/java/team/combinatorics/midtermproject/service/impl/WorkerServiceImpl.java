@@ -62,8 +62,8 @@ public class WorkerServiceImpl implements WorkerService {
             throw new KnownException(ErrorInfoEnum.CHANGE_SHADE_ERROR);
 
         // 检查员工不是经理
-        ManagePO managePO0 = manageDao.selectByDid(workerDTO.getDid());
-        if(managePO0!=null && managePO0.getManagerWid().equals(workerDTO.getWid()))
+        ManagePO managePO0 = manageDao.selectByWid(workerDTO.getWid());
+        if(managePO0!=null)
             throw new KnownException(ErrorInfoEnum.WORKER_UPDATE_ERROR);
 
         // 更新worker表
