@@ -668,6 +668,7 @@
                     html += "<tr>" + "<td>WID</td>" + "<td>姓名</td>" + "<td>工资</td>" +
                         "<td>部门ID</td>" + "<td>手机号码</td>" + "<td>邮箱</td>"+ "</tr>";
                     for(let i=0;i<managers.length;i++){
+                        if(managers[i].wid === 1) continue;
                         html+=gen_form(managers[i], 6);
                     }
                     html+="</table>";
@@ -1170,7 +1171,7 @@
                     </tr>
                     <tr>
                         <td id="dep1" contenteditable="true"></td>
-                        <td id="dep2" contenteditable="true"></td>
+                        <td id="dep2"></td>
                     </tr>
                 </table>
                 <p>
